@@ -2,14 +2,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:toerst/screens/map/widgets/draggable_fountain_list.dart';
 
 // Import widgets
 import 'widgets/floating_action_button.dart';
 import 'screens/map/widgets/bottom_app_bar.dart';
 import 'widgets/google_map.dart';
+import 'package:toerst/screens/map/widgets/draggable_fountain_list.dart';
 //import 'screens/map/widgets/user_location_button.dart';
 
 // Import constants
@@ -176,11 +177,14 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
     return Scaffold(
       bottomNavigationBar: CustomBottomAppBar(
+        // Set the properties for the left button on the buttom app bar:
         icon: _sheetPropertiesMap[_getCurrentState()]!.icon,
         text: _sheetPropertiesMap[_getCurrentState()]!.text,
         action: _sheetPropertiesMap[_getCurrentState()]!.action,
       ),
-      floatingActionButton: const CustomFloatingButton(),
+
+      //floatingActionButton: const CustomFloatingButton(),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Stack(
         children: [

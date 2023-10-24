@@ -1,4 +1,4 @@
-// lib/widgets/bottom_app_bar.dart
+// lib/screens/map/widgets/bottom_app_bar.dart
 
 import 'package:flutter/material.dart';
 import 'package:toerst/screens/map/widgets/add_fountain_button.dart';

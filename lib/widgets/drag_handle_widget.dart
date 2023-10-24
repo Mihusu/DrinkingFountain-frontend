@@ -1,5 +1,4 @@
 /*
-
 // File: widgets/drag_handle_widget.dart
 
 import 'package:flutter/material.dart';
@@ -22,5 +21,4 @@ class DragHandleWidget extends StatelessWidget {
     );
   }
 }
-
 */

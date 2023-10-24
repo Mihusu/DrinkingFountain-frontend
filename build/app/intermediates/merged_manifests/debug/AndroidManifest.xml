@@ -73,7 +73,7 @@
             android:value="2" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBWbBDRx9VX2cg-9g9xwmQ4QXcuxPt3tPc" />
+            android:value="@string/google_maps_api_key" />
 
         <service
             android:name="com.lyokone.location.FlutterLocationService"

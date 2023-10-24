@@ -4,7 +4,7 @@
             "outputFile": "com.example.toerst.app-mergeDebugResources-14:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "/Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/Personal Projects/toerst/android/app/src/main/res/values-night/styles.xml",
+                    "source": "/Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/AAU/7. semester/Project/Frontend Code/DrinkingFountain-frontend/android/app/src/main/res/values-night/styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",

@@ -1,5 +1,6 @@
 // File: lib/widgets/general_floating_action_button.dart
 import 'package:flutter/material.dart';
+import 'package:toerst/themes/app_colors.dart';
 
 class GeneralFloatingActionButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -12,7 +13,7 @@ class GeneralFloatingActionButton extends StatelessWidget {
   const GeneralFloatingActionButton({
     required this.onPressed,
     required this.child,
-    this.backgroundColor = Colors.blue,
+    this.backgroundColor = Colors.black,
     this.borderColor = Colors.transparent,
     this.borderWidth = 0.0,
     this.padding = 0.0,

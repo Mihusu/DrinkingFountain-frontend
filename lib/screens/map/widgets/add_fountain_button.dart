@@ -14,7 +14,7 @@ class AddFountainButton extends StatelessWidget {
     return GeneralFloatingActionButton(
       onPressed: onPressed,
       backgroundColor: addFountainButtonColor,
-      borderColor: addFountainButtonBorderColor,
+      borderColor: Colors.blue,
       borderWidth: 3.0,
       padding: 25.0,
       child: Transform.rotate(

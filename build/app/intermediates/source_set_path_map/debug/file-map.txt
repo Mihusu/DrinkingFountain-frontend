@@ -7,14 +7,14 @@ com.example.toerst.app-jetified-core-ktx-1.10.1-5 /Users/antonstengaardolsen/.gr
 com.example.toerst.app-jetified-play-services-maps-18.1.0-6 /Users/antonstengaardolsen/.gradle/caches/transforms-3/dd1428e79a124d53e9409113e2fd39d6/transformed/jetified-play-services-maps-18.1.0/res
 com.example.toerst.app-jetified-window-java-1.0.0-beta04-7 /Users/antonstengaardolsen/.gradle/caches/transforms-3/f3e237183d5fb0dc1438664d84aebc84/transformed/jetified-window-java-1.0.0-beta04/res
 com.example.toerst.app-jetified-play-services-base-18.1.0-8 /Users/antonstengaardolsen/.gradle/caches/transforms-3/f3f78e0ac3c0e825cf11e86241325083/transformed/jetified-play-services-base-18.1.0/res
-com.example.toerst.app-debug-9 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/Personal Projects/toerst/android/app/src/debug/res
-com.example.toerst.app-main-10 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/Personal Projects/toerst/android/app/src/main/res
-com.example.toerst.app-pngs-11 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/Personal Projects/toerst/build/app/generated/res/pngs/debug
-com.example.toerst.app-resValues-12 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/Personal Projects/toerst/build/app/generated/res/resValues/debug
-com.example.toerst.app-rs-13 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/Personal Projects/toerst/build/app/generated/res/rs/debug
-com.example.toerst.app-mergeDebugResources-14 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/Personal Projects/toerst/build/app/intermediates/incremental/debug/mergeDebugResources/merged.dir
-com.example.toerst.app-mergeDebugResources-15 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/Personal Projects/toerst/build/app/intermediates/incremental/debug/mergeDebugResources/stripped.dir
-com.example.toerst.app-merged_res-16 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/Personal Projects/toerst/build/app/intermediates/merged_res/debug
-com.example.toerst.app-packaged_res-17 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/Personal Projects/toerst/build/flutter_plugin_android_lifecycle/intermediates/packaged_res/debug
-com.example.toerst.app-packaged_res-18 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/Personal Projects/toerst/build/google_maps_flutter_android/intermediates/packaged_res/debug
-com.example.toerst.app-packaged_res-19 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/Personal Projects/toerst/build/location/intermediates/packaged_res/debug
+com.example.toerst.app-debug-9 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/AAU/7. semester/Project/Frontend Code/DrinkingFountain-frontend/android/app/src/debug/res
+com.example.toerst.app-main-10 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/AAU/7. semester/Project/Frontend Code/DrinkingFountain-frontend/android/app/src/main/res
+com.example.toerst.app-pngs-11 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/AAU/7. semester/Project/Frontend Code/DrinkingFountain-frontend/build/app/generated/res/pngs/debug
+com.example.toerst.app-resValues-12 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/AAU/7. semester/Project/Frontend Code/DrinkingFountain-frontend/build/app/generated/res/resValues/debug
+com.example.toerst.app-rs-13 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/AAU/7. semester/Project/Frontend Code/DrinkingFountain-frontend/build/app/generated/res/rs/debug
+com.example.toerst.app-mergeDebugResources-14 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/AAU/7. semester/Project/Frontend Code/DrinkingFountain-frontend/build/app/intermediates/incremental/debug/mergeDebugResources/merged.dir
+com.example.toerst.app-mergeDebugResources-15 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/AAU/7. semester/Project/Frontend Code/DrinkingFountain-frontend/build/app/intermediates/incremental/debug/mergeDebugResources/stripped.dir
+com.example.toerst.app-merged_res-16 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/AAU/7. semester/Project/Frontend Code/DrinkingFountain-frontend/build/app/intermediates/merged_res/debug
+com.example.toerst.app-packaged_res-17 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/AAU/7. semester/Project/Frontend Code/DrinkingFountain-frontend/build/flutter_plugin_android_lifecycle/intermediates/packaged_res/debug
+com.example.toerst.app-packaged_res-18 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/AAU/7. semester/Project/Frontend Code/DrinkingFountain-frontend/build/google_maps_flutter_android/intermediates/packaged_res/debug
+com.example.toerst.app-packaged_res-19 /Users/antonstengaardolsen/Library/CloudStorage/OneDrive-Personligt/AAU/7. semester/Project/Frontend Code/DrinkingFountain-frontend/build/location/intermediates/packaged_res/debug
