@@ -97,6 +97,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     if (initialLocation != null) {
       setState(() {
         _initialCameraPosition = initialLocation;
+        setState(() {
+          _loading = false;
+        });
         createMarkers();
       });
     } else {
@@ -139,10 +142,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       if (kDebugMode) {
         print("Api failed");
       }
-
-      setState(() {
-        _loading = false;
-      });
     }
   }
 
