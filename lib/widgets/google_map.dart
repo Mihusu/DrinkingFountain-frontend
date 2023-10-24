@@ -7,12 +7,14 @@ class GoogleMapWidget extends StatelessWidget {
   final String mapStyle;
   final LatLng? initialCameraPosition;
   final Function(GoogleMapController) onMapCreated;
+  final Set<Marker> markers;
 
-  const GoogleMapWidget({
+  GoogleMapWidget({
     super.key,
     required this.loading,
     required this.mapStyle,
     this.initialCameraPosition,
+    required this.markers,
     required this.onMapCreated,
   });
 
@@ -32,6 +34,7 @@ class GoogleMapWidget extends StatelessWidget {
       ),
       onMapCreated: onMapCreated,
       myLocationEnabled: true,
+      markers: markers,
     );
   }
 }

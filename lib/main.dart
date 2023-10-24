@@ -6,6 +6,13 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
+// Http
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+//Models
+import 'models/fountain_location.dart';
+
 // Import widgets
 import 'widgets/floating_action_button.dart';
 import 'screens/map/widgets/bottom_app_bar.dart';
@@ -47,6 +54,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   LatLng? _initialCameraPosition;
+  Set<Marker> _markers = Set<Marker>();
 
   Map<SheetPositionState, SheetProperties> _sheetPropertiesMap = {};
 
@@ -83,12 +91,48 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     if (initialLocation != null) {
       setState(() {
         _initialCameraPosition = initialLocation;
-        _loading = false;
+        createMarkers();
       });
     } else {
       setState(() {
         _loading = false;
       });
+    }
+  }
+
+  // Function to generate random markers
+  Future<void> createMarkers() async {
+    const apiKey = 'abc123'; // Replace with your actual API key
+    const headers = <String, String>{'Api-Key': apiKey};
+    const url = 'http://130.225.39.184/fountain/map';
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = json.decode(response.body);
+
+      for (var json in jsonList) {
+        final FountainLocation location = FountainLocation.fromJson(json);
+
+        _markers.add(
+          Marker(
+            markerId: MarkerId(
+                'marker${location.id}'), // Use a unique ID for each marker
+            position: LatLng(location.latitude, location.longitude),
+            infoWindow: InfoWindow(
+              title: 'Fountain ${location.id}',
+              snippet: 'Marker ${location.id}',
+            ),
+          ),
+        );
+      }
+      setState(() {
+        _loading = false;
+      });
+    } else {
+      if (kDebugMode) {
+        print("Api failed");
+      }
     }
   }
 
@@ -196,6 +240,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
               _mapController = controller;
               controller.setMapStyle(_mapStyle);
             },
+            markers: _markers,
           ),
           _buildFloatingActionButton(screenHeight),
           DraggableFountainList(
