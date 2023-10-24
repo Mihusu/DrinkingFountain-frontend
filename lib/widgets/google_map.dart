@@ -34,6 +34,7 @@ class GoogleMapWidget extends StatelessWidget {
       ),
       zoomControlsEnabled: false,
       myLocationButtonEnabled: false,
+      compassEnabled: false,
       // compassEnabled: false,
       onMapCreated: onMapCreated,
       myLocationEnabled: true,
