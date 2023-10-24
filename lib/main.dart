@@ -133,6 +133,10 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       if (kDebugMode) {
         print("Api failed");
       }
+
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
