@@ -10,6 +10,9 @@ import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+// env file
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 //Models
 import 'models/fountain_location.dart';
 
@@ -28,7 +31,10 @@ import 'themes/app_colors.dart';
 // Import services
 import 'services/location_manager.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  await dotenv.load(fileName: ".env");
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -102,8 +108,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
   // Function to generate random markers
   Future<void> createMarkers() async {
-    const apiKey = 'abc123'; // Replace with your actual API key
-    const headers = <String, String>{'Api-Key': apiKey};
+    final apiKey = dotenv.env['API_KEY'] ?? 'default';
+    final headers = <String, String>{'Api-Key': apiKey};
     const url = 'http://130.225.39.184/fountain/map';
 
     final response = await http.get(Uri.parse(url), headers: headers);
