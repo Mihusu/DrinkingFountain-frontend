@@ -27,6 +27,10 @@ const Color tertiaryButtonColor = Colors.transparent;
 const Color tertiaryButtonBorderColor = Colors.black;
 const Color tertiaryButtonTextColor = Colors.black;
 
+// BACK TO MAP BUTTON COLORS
+const Color backToMapButtonIconColor = Colors.black;
+const Color backToMapButtonTextColor = Colors.black;
+
 // BOTTOM APP BAR COLORS
 const Color bottomAppBarColor = Color.fromARGB(255, 255, 255, 255);
 const Color bottomAppBarTextColor = Colors.black;

@@ -7,11 +7,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 // Import widgets
-import 'widgets/floating_action_button.dart';
 import 'screens/map/widgets/bottom_app_bar.dart';
 import 'widgets/google_map.dart';
 import 'package:toerst/screens/map/widgets/draggable_fountain_list.dart';
-//import 'screens/map/widgets/user_location_button.dart';
 
 // Import constants
 import 'config/draggable_sheet_constants.dart';
