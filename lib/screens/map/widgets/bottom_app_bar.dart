@@ -1,6 +1,7 @@
 // lib/screens/map/widgets/bottom_app_bar.dart
 
 import 'package:flutter/material.dart';
+import 'package:toerst/screens/login/login_screen.dart';
 import 'package:toerst/screens/map/widgets/add_fountain_button.dart';
 import 'package:toerst/themes/app_colors.dart';
 
@@ -65,7 +66,14 @@ class CustomBottomAppBar extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.account_circle,
                       color: bottomAppBarIconColor),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                    ),
+                );
+                  },
                 ),
                 const Text("Profile",
                     style: TextStyle(
