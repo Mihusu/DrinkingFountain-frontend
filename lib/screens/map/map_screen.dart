@@ -30,6 +30,9 @@ import 'package:toerst/config/draggable_sheet_constants.dart';
 import 'package:toerst/config/sheet_properties.dart';
 import 'package:toerst/themes/app_colors.dart';
 
+//Secure storage
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 // Import services
 // import 'package:toerst/services/location_manager.dart';
 
@@ -48,6 +51,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   late Animation<double> _animation;
   LatLng? _initialCameraPosition;
   final Set<Marker> _markers = Set<Marker>();
+  final secureStorage = new FlutterSecureStorage();
 
   Map<SheetPositionState, SheetProperties> _sheetPropertiesMap = {};
 
@@ -78,7 +82,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
   bool _loading = true; // Set to true initially
 
-   void _initialize() async {
+  void _initialize() async {
     final locationService = LocationService();
     final initialLocation = await locationService.fetchInitialLocation();
     if (initialLocation != null) {
@@ -96,11 +100,10 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     }
   }
 
-
   // Function to generate random markers
   Future<void> createMarkers() async {
     final apiKey = dotenv.env['API_KEY'] ?? 'default';
-    final String ip = dotenv.env['BACKEDN_IP'] ?? 'default';
+    final ip = dotenv.env['BACKEND_IP'] ?? 'default';
     final headers = <String, String>{'Api-Key': apiKey};
     final url = 'http://$ip/fountain/map';
     print(url);
@@ -220,11 +223,11 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
     return Scaffold(
       bottomNavigationBar: CustomBottomAppBar(
-        // Set the properties for the left button on the buttom app bar:
-        icon: _sheetPropertiesMap[_getCurrentState()]!.icon,
-        text: _sheetPropertiesMap[_getCurrentState()]!.text,
-        action: _sheetPropertiesMap[_getCurrentState()]!.action,
-      ),
+          // Set the properties for the left button on the buttom app bar:
+          icon: _sheetPropertiesMap[_getCurrentState()]!.icon,
+          text: _sheetPropertiesMap[_getCurrentState()]!.text,
+          action: _sheetPropertiesMap[_getCurrentState()]!.action,
+          secureStorage: secureStorage),
 
       //floatingActionButton: const CustomFloatingButton(),
 
