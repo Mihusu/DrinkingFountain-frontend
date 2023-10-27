@@ -2,14 +2,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:toerst/screens/map/widgets/draggable_fountain_list.dart';
 
 // Import widgets
 import 'screens/map/widgets/bottom_app_bar.dart';
 import 'widgets/google_map.dart';
-import 'package:toerst/screens/map/widgets/draggable_fountain_list.dart';
+
+import 'screens/map/widgets/add_fountain_button.dart';
 
 // Import constants
 import 'config/draggable_sheet_constants.dart';
@@ -19,7 +20,10 @@ import 'themes/app_colors.dart';
 // Import services
 import 'services/location_manager.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  //WidgetsFlutterBinding.ensureInitialized(); // Ensure that plugin services are initialized so that `availableCameras()`
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -75,6 +79,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
   bool _loading = true; // Set to true initially
 
+  // User location
   void _initialize() async {
     final locationService = LocationService();
     final initialLocation = await locationService.fetchInitialLocation();
@@ -142,6 +147,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     }
   }
 
+  // User location
   Future<void> _goToCurrentLocation() async {
     final location = Location();
     final hasPermission = await location.hasPermission();
@@ -175,14 +181,11 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
     return Scaffold(
       bottomNavigationBar: CustomBottomAppBar(
-        // Set the properties for the left button on the buttom app bar:
         icon: _sheetPropertiesMap[_getCurrentState()]!.icon,
         text: _sheetPropertiesMap[_getCurrentState()]!.text,
         action: _sheetPropertiesMap[_getCurrentState()]!.action,
       ),
-
-      //floatingActionButton: const CustomFloatingButton(),
-
+      floatingActionButton: const AddFountainButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Stack(
         children: [
@@ -215,6 +218,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     );
   }
 
+  // User location
   Positioned _buildFloatingActionButton(double screenHeight) {
     return Positioned(
       top: (_sheetPosition * screenHeight) - 70,

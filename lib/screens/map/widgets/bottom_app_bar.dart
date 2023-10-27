@@ -1,7 +1,7 @@
-// lib/screens/map/widgets/bottom_app_bar.dart
+// lib/widgets/bottom_app_bar.dart
 
 import 'package:flutter/material.dart';
-import 'package:toerst/screens/map/widgets/add_fountain_button.dart';
+//import 'package:toerst/screens/map/widgets/add_fountain_button.dart';
 import 'package:toerst/themes/app_colors.dart';
 
 class CustomBottomAppBar extends StatelessWidget {
@@ -39,18 +39,13 @@ class CustomBottomAppBar extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
+          const Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 48.0,
-                  child: AddFountainButton(onPressed: () {
-                    // Define what should happen when the button is pressed
-                  }), // Now the SizedBox is not marked as const
-                ),
-                const Text("Add Fountain",
+                SizedBox(height: 48.0), // Placeholder for the button
+                Text("Add Fountain",
                     style: TextStyle(
                         color: bottomAppBarTextColor,
                         fontWeight: FontWeight.w600)),
