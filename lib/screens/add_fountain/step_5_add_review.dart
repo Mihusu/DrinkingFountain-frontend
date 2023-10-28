@@ -10,15 +10,15 @@ class AddTextualReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AddFountainScreen(
+    return const AddFountainScreen(
       content: CustomTextField(
           charLimit:
               200), // The widget that would be in the center of the screen
-      currentStep: 4, // We are on step 4
+      currentStep: 4, // We are on step 5
       stepText:
           "Leave a written review if you wish.", // Text for this specific step
       nextDestination:
-          const AddPhotoScreen(), // The screen to navigate to when 'Next' is pressed
+          AddPhotoScreen(), // The screen to navigate to when 'Next' is pressed
     );
   }
 }

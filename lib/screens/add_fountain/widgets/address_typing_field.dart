@@ -1,72 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_maps_webservice/places.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as dotenv;
 
-void main() {
-  runApp(MyApp());
-}
+class AddressSearchWidget extends StatelessWidget {
+  late final GoogleMapsPlaces _places;
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text('Address Autocomplete')),
-        body: AddressTypingField(),
-      ),
-    );
+  AddressSearchWidget() {
+    final apiKey = dotenv.dotenv.env['GOOGLE_MAPS_API_KEY'];
+    if (apiKey == null) {
+      throw Exception('Google Maps API key not found');
+    }
+    _places = GoogleMapsPlaces(apiKey: apiKey);
   }
-}
 
-class AddressTypingField extends StatefulWidget {
-  @override
-  _AddressTypingFieldState createState() => _AddressTypingFieldState();
-}
-
-class _AddressTypingFieldState extends State<AddressTypingField> {
-  final TextEditingController _controller = TextEditingController();
-  final List<String> _suggestions = [
-    'Strandvejen 1, 2900 Hellerup',
-    'Vesterbrogade 2B, 1620 København',
-    'Møllegade 3, 8000 Aarhus',
-    'Algade 4, 9000 Aalborg',
-  ];
-  List<String> _filteredSuggestions = [];
+  Future<void> _handlePress(BuildContext context) async {
+    final apiKey = dotenv.dotenv.env['GOOGLE_MAPS_API_KEY'];
+    if (apiKey == null) {
+      throw Exception('Google Maps API key not found');
+    }
+    Prediction? prediction = await PlacesAutocomplete.show(
+      context: context,
+      apiKey: apiKey,
+      mode: Mode.overlay,
+      language: "da",
+      components: [Component(Component.country, "dk")],
+    );
+    if (prediction != null) {
+      PlacesDetailsResponse detail =
+          await _places.getDetailsByPlaceId(prediction.placeId ?? '');
+      final lat = detail.result.geometry?.location.lat;
+      final lng = detail.result.geometry?.location.lng;
+      if (lat != null && lng != null) {
+        print(
+            "Selected place: ${prediction.description}, Latitude: $lat, Longitude: $lng");
+      } else {
+        print(
+            "Failed to retrieve location details for: ${prediction.description}");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-            controller: _controller,
-            decoration: InputDecoration(labelText: 'Indtast adresse'),
-            onChanged: (value) {
-              setState(() {
-                _filteredSuggestions = _suggestions
-                    .where((suggestion) =>
-                        suggestion.toLowerCase().contains(value.toLowerCase()))
-                    .toList();
-              });
-            },
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: _filteredSuggestions.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(_filteredSuggestions[index]),
-                onTap: () {
-                  _controller.text = _filteredSuggestions[index];
-                  setState(() {
-                    _filteredSuggestions = [];
-                  });
-                },
-              );
-            },
-          ),
-        ],
-      ),
+    return ElevatedButton(
+      onPressed: () => _handlePress(context),
+      child: Text("Search Address"),
     );
   }
 }

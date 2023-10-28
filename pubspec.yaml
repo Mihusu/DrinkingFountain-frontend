@@ -33,6 +33,10 @@ dependencies:
     sdk: flutter
   google_maps_flutter: ^2.5.0
   camera: ^0.10.5+5
+  flutter_google_places: ^0.3.0
+  flutter_dotenv: ^5.1.0
+  flutter_rating_bar: ^4.0.1
+  maps_places_autocomplete: ^0.0.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -40,8 +44,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   path_provider: ^2.1.1
   path: ^1.8.3
-  flutter_rating_bar: ^4.0.1
   google_maps_webservice: ^0.0.20-nullsafety.5
+
+
+
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +67,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/silverMapTheme.json
+    - assets/.env
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

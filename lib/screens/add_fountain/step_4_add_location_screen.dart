@@ -11,10 +11,9 @@ class AddLocationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AddFountainScreen(
-      content: AddressTypingField(),
+      content: AddressSearchWidget(),
       currentStep: 3, // We are on step 4
-      stepText:
-          "Leave a written review if you wish.", // Text for this specific step
+      stepText: "Where is the fountain located?", // Text for this specific step
       nextDestination:
           const AddTextualReviewScreen(), // The screen to navigate to when 'Next' is pressed
     );

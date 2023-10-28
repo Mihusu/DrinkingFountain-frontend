@@ -1,4 +1,6 @@
 // lib/main.dart
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,10 +21,18 @@ import 'themes/app_colors.dart';
 
 // Import services
 import 'services/location_manager.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as dotenv;
 
-void main() {
-  //WidgetsFlutterBinding.ensureInitialized(); // Ensure that plugin services are initialized so that `availableCameras()`
-  runApp(const MyApp());
+// Modified main function to use flutter_dotenv to load environment variables
+Future<void> main() async {
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    await dotenv.dotenv.load(fileName: "assets/.env"); // Updated line
+    runApp(const MyApp());
+  } catch (error, stackTrace) {
+    print('Error: $error');
+    print('StackTrace: $stackTrace');
+  }
 }
 
 class MyApp extends StatelessWidget {
