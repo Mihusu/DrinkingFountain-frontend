@@ -1,17 +1,19 @@
 // fountain_list.dart
 import 'package:flutter/material.dart';
+import 'package:toerst/models/nearest_fountain.dart';
 
 class FountainList extends StatelessWidget {
   final Color listedItemColor;
   final Color listedItemBorderColor;
   final Color listedItemTextColor;
+  final List<NearestFountain> nearestFountains;
 
-  const FountainList({
-    super.key,
-    required this.listedItemColor,
-    required this.listedItemBorderColor,
-    required this.listedItemTextColor,
-  });
+  const FountainList(
+      {super.key,
+      required this.listedItemColor,
+      required this.listedItemBorderColor,
+      required this.listedItemTextColor,
+      required this.nearestFountains});
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +23,15 @@ class FountainList extends StatelessWidget {
   ListView _buildListView() {
     return ListView.builder(
       padding: const EdgeInsets.only(top: 13.0, bottom: 70.0),
-      itemCount: 6,
+      itemCount: nearestFountains.length,
       itemBuilder: (BuildContext context, int index) {
-        return _buildListItem();
+        final item = nearestFountains[index];
+        return _buildListItem(item);
       },
     );
   }
 
-  Container _buildListItem() {
+  Container _buildListItem(fountainData) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 4.0),
       padding: const EdgeInsets.all(10.0),
@@ -37,34 +40,40 @@ class FountainList extends StatelessWidget {
         borderRadius: BorderRadius.circular(90.0),
         border: Border.all(color: listedItemBorderColor, width: 1.0),
       ),
-      child: _buildListItemRow(),
+      child: _buildListItemRow(fountainData),
     );
   }
 
-  Row _buildListItemRow() {
+  Row _buildListItemRow(fountainData) {
     return Row(
       children: <Widget>[
-        const Icon(Icons.question_mark_outlined,
-            size: 50.0, color: Colors.black),
+        const Icon(Icons.question_mark_outlined, //TODO add photo for type
+            size: 50.0,
+            color: Colors.black),
         const SizedBox(width: 10.0),
-        Expanded(child: _buildListItemTextColumn()),
+        Expanded(child: _buildListItemTextColumn(fountainData)),
         _buildDirectionsButton(),
       ],
     );
   }
 
-  Column _buildListItemTextColumn() {
+  Column _buildListItemTextColumn(NearestFountain fountainData) {
+    final String distance = fountainData.distance.toStringAsFixed(2);
+    final String distanceText = "$distance km";
+    const String address = "address ...";
+    final int starRating = fountainData.score.toInt();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const Text("\"Distance here\""),
+        Text(distanceText),
         Row(
           children: List.generate(
-            5,
+            starRating,
             (index) => Icon(Icons.star, size: 15.0, color: listedItemTextColor),
           ),
         ),
-        const Text("\"Address here\""),
+        const Text(address),
       ],
     );
   }

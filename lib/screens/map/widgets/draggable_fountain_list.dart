@@ -1,6 +1,7 @@
 // lib/screens/map/widgets/draggable_fountain_list.dart
 
 import 'package:flutter/material.dart';
+import 'package:toerst/models/nearest_fountain.dart';
 import 'fountain_list.dart'; // Ensure this import is correct
 import 'package:toerst/themes/app_colors.dart'; // Ensure this import is correct
 
@@ -12,20 +13,26 @@ class DraggableFountainList extends StatelessWidget {
   final Color listedItemColor;
   final Color listedItemBorderColor;
   final Color listedItemTextColor;
+  final bool loading;
+  final List<NearestFountain> nearestFountains;
 
-  const DraggableFountainList({
-    super.key,
-    required this.sheetPosition,
-    required this.onVerticalDragUpdate,
-    required this.onVerticalDragEnd, // Updated function signature
-    required this.listedItemColor,
-    required this.listedItemBorderColor,
-    required this.listedItemTextColor,
-  });
+  const DraggableFountainList(
+      {super.key,
+      required this.sheetPosition,
+      required this.onVerticalDragUpdate,
+      required this.onVerticalDragEnd, // Updated function signature
+      required this.listedItemColor,
+      required this.listedItemBorderColor,
+      required this.listedItemTextColor,
+      required this.loading,
+      required this.nearestFountains});
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    if (loading) {
+      return Container();
+    }
     return Positioned(
       top: sheetPosition * screenHeight,
       child: GestureDetector(
@@ -62,6 +69,7 @@ class DraggableFountainList extends StatelessWidget {
             listedItemColor: listedItemColor,
             listedItemBorderColor: listedItemBorderColor,
             listedItemTextColor: listedItemTextColor,
+            nearestFountains: nearestFountains,
           ),
         ),
       ],
