@@ -270,6 +270,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       right: 14,
       child: _sheetPosition != 0.1
           ? FloatingActionButton(
+              heroTag: "newFountain",
               onPressed: _goToCurrentLocation,
               backgroundColor: Colors.black,
               child: const Icon(Icons.my_location),
