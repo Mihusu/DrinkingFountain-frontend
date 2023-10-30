@@ -1,7 +1,7 @@
 // lib/screens/add_fountain/widgets/back_to_map_button.dart
 
 import 'package:flutter/material.dart';
-import 'package:toerst/main.dart';
+import 'package:toerst/screens/map/map_screen.dart';
 import 'package:toerst/themes/app_colors.dart';
 
 class BackToMapButton extends StatelessWidget {

@@ -101,6 +101,7 @@ class _MultiStepFormState extends State<MultiStepForm> {
         fountainTypes: FountainTypes.values,
         onTypeSelected: _setType,
       ),
+
       FountainRatingBar(onRatingChanged: _setRating),
       //AddressSearchWidget(onLocationSelected: _setLocation),
       AddressInputWidget(
