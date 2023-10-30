@@ -116,7 +116,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   void _loadMapStyle() {
-    rootBundle.loadString('assets/silverMapTheme.json').then((string) {
+    rootBundle.loadString('assets/themes/silverMapTheme.json').then((string) {
       setState(() {
         _mapStyle = string;
       });

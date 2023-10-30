@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:toerst/themes/app_colors.dart';
 
 class StepIndicator extends StatelessWidget {
   final int totalSteps;
@@ -12,31 +11,35 @@ class StepIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(totalSteps * 2 - 1, (index) {
-        if (index.isEven) {
-          // Render the dots
-          return index ~/ 2 == currentStep ? _currentStepDot() : _defaultDot();
-        } else {
-          // Render the line in between the dots
-          return _line();
-        }
-      }),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        _line(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(totalSteps, (index) {
+            return Container(
+              width: 22.0, // Set to the width of the largest dot
+              height: 22.0, // Set to the height of the largest dot
+              child: Center(
+                child: index == currentStep ? _currentStepDot() : _defaultDot(),
+              ),
+            );
+          }),
+        ),
+      ],
     );
   }
 
   Widget _currentStepDot() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5.0),
       width: 22.0,
       height: 22.0,
       decoration: BoxDecoration(
         color: Colors.black,
         shape: BoxShape.circle,
         border: Border.all(
-          color:
-              primaryButtonColor, // Make sure 'primaryButtonColor' is defined in this scope
+          color: Colors.blue, // Replace with your border color
           width: 6.0,
         ),
       ),
@@ -45,7 +48,6 @@ class StepIndicator extends StatelessWidget {
 
   Widget _defaultDot() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5.0),
       width: 10.0,
       height: 10.0,
       decoration: const BoxDecoration(
@@ -57,9 +59,11 @@ class StepIndicator extends StatelessWidget {
 
   Widget _line() {
     return Container(
-      width: 40.0,
       height: 4.0,
       color: Colors.black,
+      margin: const EdgeInsets.symmetric(
+          horizontal:
+              11.0), // Adjust margin to align with the center of the dots
     );
   }
 }

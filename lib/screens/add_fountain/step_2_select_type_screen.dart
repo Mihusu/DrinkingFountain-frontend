@@ -1,3 +1,4 @@
+/*
 // PATH: lib/screens/add_fountain/step_2_select_type_screen.dart
 
 import 'package:flutter/material.dart';
@@ -21,16 +22,16 @@ class _SelectTypeScreenState extends State<SelectTypeScreen> {
   // Initialize the list of FountainTypes
   final List<FountainType> fountainTypes = [
     FountainType(
-      id: 'regularDrinkingFountainIcon',
-      icon: const Icon(Icons.local_drink, size: 40),
-      description: 'Select this for stand-up sips directly from the source.',
-    ),
+        id: 'regularDrinkingFountainIcon',
+        icon: const Icon(Icons.local_drink, size: 40),
+        description: 'Select this for stand-up sips directly from the source.',
+        title: 'Regular Drinking Fountain'),
     FountainType(
-      id: 'fillingStationIcon',
-      icon: const Icon(Icons.local_gas_station, size: 40),
-      description:
-          'Select this for stations to fill up your bottle or container.',
-    ),
+        id: 'fillingStationIcon',
+        icon: const Icon(Icons.local_gas_station, size: 40),
+        description:
+            'Select this for stations to fill up your bottle or container.',
+        title: 'Filling Station'),
     // Add More types if needed
   ];
 
@@ -55,3 +56,4 @@ class _SelectTypeScreenState extends State<SelectTypeScreen> {
     );
   }
 }
+*/

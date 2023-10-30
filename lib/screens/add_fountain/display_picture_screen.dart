@@ -1,10 +1,7 @@
-// PATH: lib/screens/add_fountain/display_picture_screen.dart
-
 import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:toerst/screens/add_fountain/take_picture_screen.dart';
 
 // A widget that displays the picture taken by the user.
 class DisplayPictureScreen extends StatelessWidget {
@@ -20,39 +17,50 @@ class DisplayPictureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Display the Picture')),
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.black,
+      ),
       body: Column(
         children: [
           Expanded(
-            child: Image.file(File(imagePath)),
+            child: FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Image.file(File(imagePath)),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate back to TakePictureScreen to retake the photo
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TakePictureScreen(camera: camera),
-                      ),
-                    );
+                    // Pop the current screen to go back to the TakePictureScreen
+                    Navigator.pop(context);
                   },
-                  child: const Text('Retake'),
+                  child: const Icon(Icons.replay, color: Colors.white),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.yellow,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
                 ),
+                SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(
-                        context, File(imagePath)); // Pop to TakePictureScreen
-                    Navigator.pop(
-                        context,
-                        File(
-                            imagePath)); // Pop to AddPhotoScreen with the image file
+                    // Pop the current screen and return the image file
+                    Navigator.pop(context, File(imagePath));
                   },
-                  child: const Text('Use this photo'),
+                  child: const Icon(Icons.check, color: Colors.white),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
                 ),
               ],
             ),

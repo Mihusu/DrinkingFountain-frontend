@@ -1,3 +1,5 @@
+/*
+
 // PATH: lib/screens/add_fountain/step_3_rate_fountain.dart
 
 import 'package:flutter/material.dart';
@@ -22,3 +24,4 @@ class RateFountainScreen extends StatelessWidget {
     );
   }
 }
+*/

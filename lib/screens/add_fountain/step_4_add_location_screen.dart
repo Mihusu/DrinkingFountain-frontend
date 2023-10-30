@@ -1,3 +1,4 @@
+/*
 // PATH: lib/screens/add_fountain/step_1_add_photo_screen.dart
 
 import 'package:flutter/material.dart';
@@ -19,3 +20,4 @@ class AddLocationScreen extends StatelessWidget {
     );
   }
 }
+*/
