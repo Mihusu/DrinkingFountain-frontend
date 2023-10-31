@@ -1,19 +1,42 @@
-// lib/screens/map/map_screen.dart
-import 'dart:async';
-
+// lib/main.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:toerst/config/draggable_sheet_constants.dart';
-import 'package:toerst/config/sheet_properties.dart';
-import 'package:toerst/screens/map/widgets/add_fountain_button.dart';
+import 'package:toerst/models/fountain_location.dart';
+import 'package:toerst/models/nearest_fountain.dart';
+import 'package:toerst/screens/focus_fountain/focus_fountain_screen.dart';
 import 'package:toerst/screens/map/widgets/bottom_app_bar.dart';
-import 'package:toerst/screens/map/widgets/draggable_fountain_list.dart';
 import 'package:toerst/services/location_manager.dart';
-import 'package:toerst/themes/app_colors.dart';
 import 'package:toerst/widgets/google_map.dart';
+
+// Import widgets
+// import 'package:toerst/widgets/floating_action_button.dart';
+// import 'package:toerst/screens/map/widgets/bottom_app_bar.dart';
+// import 'widgets/google_map.dart';
+import 'package:toerst/screens/map/widgets/draggable_fountain_list.dart';
+//import 'screens/map/widgets/user_location_button.dart';
+
+// Http
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+// env file
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+// Import constants
+import 'package:toerst/config/draggable_sheet_constants.dart';
+
+import 'package:toerst/config/sheet_properties.dart';
+import 'package:toerst/themes/app_colors.dart';
+
+//Secure storage
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+// Import services
+// import 'package:toerst/services/location_manager.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -29,6 +52,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   LatLng? _initialCameraPosition;
+  final Set<Marker> _markers = Set<Marker>();
+  final List<NearestFountain> _nearestFountains = [];
+  final secureStorage = new FlutterSecureStorage();
 
   Map<SheetPositionState, SheetProperties> _sheetPropertiesMap = {};
 
@@ -59,19 +85,101 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
   bool _loading = true; // Set to true initially
 
-  // User location
   void _initialize() async {
     final locationService = LocationService();
     final initialLocation = await locationService.fetchInitialLocation();
     if (initialLocation != null) {
       setState(() {
         _initialCameraPosition = initialLocation;
-        _loading = false;
+        setState(() {
+          _loading = false;
+        });
+        createMarkers(initialLocation);
+        createNearestFountains(initialLocation);
       });
     } else {
       setState(() {
         _loading = false;
       });
+    }
+  }
+
+  // Function to generate random markers
+  Future<void> createMarkers(position) async {
+    final apiKey = dotenv.env['API_KEY'] ?? 'default';
+    final ip = dotenv.env['BACKEND_IP'] ?? 'default';
+    final headers = <String, String>{'Api-Key': apiKey};
+    final double latitude = position.latitude;
+    final double longitude = position.longitude;
+    final url =
+        'http://$ip/fountain/map?longitude=$longitude&latitude=$latitude';
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = json.decode(response.body);
+
+      for (var json in jsonList) {
+        final FountainLocation location = FountainLocation.fromJson(json);
+
+        _markers.add(
+          Marker(
+            markerId: MarkerId(
+                'marker${location.id}'), // Use a unique ID for each marker
+            position: LatLng(location.latitude, location.longitude),
+            infoWindow: InfoWindow(
+              onTap: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FocusFountainScreen(
+                      secureStorage: secureStorage,
+                      fountainId: location.id,
+                    ),
+                  ),
+                )
+              },
+              title: 'Fountain ${location.id}',
+              snippet: 'Distance ${location.distance.toStringAsFixed(2)} km',
+            ),
+          ),
+        );
+      }
+      setState(() {
+        _loading = false;
+      });
+    } else {
+      if (kDebugMode) {
+        print("Api failed");
+      }
+    }
+  }
+
+  Future<void> createNearestFountains(position) async {
+    final apiKey = dotenv.env['API_KEY'] ?? 'default';
+    final ip = dotenv.env['BACKEND_IP'] ?? 'default';
+    final headers = <String, String>{'Api-Key': apiKey};
+    final double latitude = position.latitude;
+    final double longitude = position.longitude;
+    final url =
+        'http://$ip/fountain/nearest/list?longitude=$longitude&latitude=$latitude';
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = json.decode(response.body);
+
+      final nearestFountains =
+          jsonList.map((json) => NearestFountain.fromJson(json)).toList();
+
+      setState(() {
+        _nearestFountains.addAll(nearestFountains);
+        _loading = false;
+      });
+    } else {
+      if (kDebugMode) {
+        print("Api failed");
+      }
     }
   }
 
@@ -86,7 +194,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   void _loadMapStyle() {
-    rootBundle.loadString('assets/themes/silverMapTheme.json').then((string) {
+    rootBundle.loadString('assets/silverMapTheme.json').then((string) {
       setState(() {
         _mapStyle = string;
       });
@@ -127,7 +235,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     }
   }
 
-// User location
   Future<void> _goToCurrentLocation() async {
     final location = Location();
     final hasPermission = await location.hasPermission();
@@ -141,16 +248,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     if (currentLocation.latitude != null && currentLocation.longitude != null) {
       final target =
           LatLng(currentLocation.latitude!, currentLocation.longitude!);
-
-      // Combine position and zoom into a single CameraPosition
-      final cameraPosition = CameraPosition(
-        target: target,
-        zoom: 16.0,
-      );
-
-      // Update the camera position in one go
-      await _mapController
-          .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+      _mapController.animateCamera(CameraUpdate.newLatLng(target));
     } else {
       if (kDebugMode) {
         print("Latitude and Longitude are null");
@@ -170,11 +268,14 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
     return Scaffold(
       bottomNavigationBar: CustomBottomAppBar(
-        icon: _sheetPropertiesMap[_getCurrentState()]!.icon,
-        text: _sheetPropertiesMap[_getCurrentState()]!.text,
-        action: _sheetPropertiesMap[_getCurrentState()]!.action,
-      ),
-      floatingActionButton: const AddFountainButton(),
+          // Set the properties for the left button on the buttom app bar:
+          icon: _sheetPropertiesMap[_getCurrentState()]!.icon,
+          text: _sheetPropertiesMap[_getCurrentState()]!.text,
+          action: _sheetPropertiesMap[_getCurrentState()]!.action,
+          secureStorage: secureStorage),
+
+      //floatingActionButton: const CustomFloatingButton(),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Stack(
         children: [
@@ -186,6 +287,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
               _mapController = controller;
               controller.setMapStyle(_mapStyle);
             },
+            markers: _markers,
           ),
           _buildFloatingActionButton(screenHeight),
           DraggableFountainList(
@@ -201,19 +303,21 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
             listedItemColor: listedItemColor,
             listedItemBorderColor: listedItemBorderColor,
             listedItemTextColor: listedItemTextColor,
+            loading: _loading,
+            nearestFountains: _nearestFountains,
           ),
         ],
       ),
     );
   }
 
-  // User location
   Positioned _buildFloatingActionButton(double screenHeight) {
     return Positioned(
       top: (_sheetPosition * screenHeight) - 70,
       right: 14,
       child: _sheetPosition != 0.1
           ? FloatingActionButton(
+              heroTag: "newFountain",
               onPressed: _goToCurrentLocation,
               backgroundColor: Colors.black,
               child: const Icon(Icons.my_location),
