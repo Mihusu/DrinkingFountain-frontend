@@ -8,27 +8,36 @@ import 'package:flutter/material.dart';
 import '/screens/add_fountain/take_picture_screen.dart';
 
 class CapturePhotoButton extends StatefulWidget {
-  final File? imageFile; // Still nullable here
+  final String? imageBase64; // Use a base64 string to represent the image
   final Function(String) onImageCaptured;
 
   const CapturePhotoButton({
-    super.key,
-    this.imageFile,
+    Key? key,
+    this.imageBase64,
     required this.onImageCaptured,
-  });
+  }) : super(key: key);
 
   @override
   _CapturePhotoButtonState createState() => _CapturePhotoButtonState();
 }
 
 class _CapturePhotoButtonState extends State<CapturePhotoButton> {
-  File? capturedImageFile;
+  String? capturedImageBase64;
 
   @override
   void initState() {
     super.initState();
-    if (widget.imageFile != null) {
-      capturedImageFile = widget.imageFile;
+    if (widget.imageBase64 != null) {
+      capturedImageBase64 = widget.imageBase64;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant CapturePhotoButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.imageBase64 != null &&
+        widget.imageBase64 != oldWidget.imageBase64) {
+      capturedImageBase64 = widget.imageBase64;
     }
   }
 
@@ -44,19 +53,17 @@ class _CapturePhotoButtonState extends State<CapturePhotoButton> {
       );
 
       if (imageFile != null) {
+        final List<int> imageBytes = await imageFile.readAsBytes();
+        final String base64Image = base64Encode(imageBytes);
+
         setState(() {
-          capturedImageFile = imageFile;
+          capturedImageBase64 = base64Image;
         });
 
-        final List<int> imageBytes = await capturedImageFile!.readAsBytes();
-        final String base64Image = base64Encode(imageBytes);
         widget.onImageCaptured(base64Image);
 
         if (kDebugMode) {
-          print('Image File Path: ${capturedImageFile?.path}');
-          capturedImageFile?.exists().then((exists) {
-            print('File Exists: $exists');
-          });
+          print('Image Captured: $base64Image');
         }
       }
     } else {
@@ -76,15 +83,14 @@ class _CapturePhotoButtonState extends State<CapturePhotoButton> {
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(30.0),
-          image: capturedImageFile != null
+          image: capturedImageBase64 != null
               ? DecorationImage(
-                  image: FileImage(capturedImageFile!),
-                  fit: BoxFit
-                      .cover, // This will ensure the image fits inside the border while maintaining its aspect ratio.
+                  image: MemoryImage(base64Decode(capturedImageBase64!)),
+                  fit: BoxFit.cover,
                 )
               : null,
         ),
-        child: capturedImageFile == null
+        child: capturedImageBase64 == null
             ? const Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -95,11 +101,12 @@ class _CapturePhotoButtonState extends State<CapturePhotoButton> {
                   ],
                 ),
               )
-            : null, // Since the image is now part of the container's decoration, we can return null when an image is present.
+            : null,
       ),
     );
   }
 }
+
 
 
 

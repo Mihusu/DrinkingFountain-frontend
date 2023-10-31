@@ -42,22 +42,31 @@ class _FormOverviewState extends State<FormOverview> {
 
   Future<void> _fetchAddressFromCoordinates() async {
     try {
+      // Fetch placemarks (locations) based on latitude and longitude
       List<Placemark> placemarks = await placemarkFromCoordinates(
-          widget.fountainData.latitude!, widget.fountainData.longitude!);
+          widget.fountainData.latitude, widget.fountainData.longitude);
+
+      // Check if placemarks are available
       if (placemarks.isNotEmpty) {
+        // Take the first placemark from the list
         final placemark = placemarks.first;
+
+        // Extract various components of the address
         final street = placemark.street;
         final city = placemark.locality;
         final state = placemark.administrativeArea;
         final postalCode = placemark.postalCode;
 
+        // Update the address state variable and refresh UI
         setState(() {
           _address = "$street, $city, $state $postalCode";
         });
       } else {
+        // Log a message if no address is found
         print('No address found for the provided coordinates.');
       }
     } catch (e) {
+      // Log any errors that occur during the fetch
       print('Error occurred: $e');
     }
   }
@@ -66,7 +75,7 @@ class _FormOverviewState extends State<FormOverview> {
     return Row(
       children: List.generate(
         rating,
-        (index) => Icon(
+        (index) => const Icon(
           Icons.star,
           color: Colors.black,
         ),
@@ -145,7 +154,7 @@ class _FormOverviewState extends State<FormOverview> {
             ),
           ),
           Container(
-            padding: EdgeInsets.only(bottom: buttonBottomPadding),
+            padding: const EdgeInsets.only(bottom: buttonBottomPadding),
             child: StandardButton(
               label: 'Submit',
               onPressed: () {
@@ -155,7 +164,7 @@ class _FormOverviewState extends State<FormOverview> {
               textColor: Colors.white,
             ),
           ),
-          SizedBox(
+          const SizedBox(
               height: containerBottomPadding), // Add some space at the bottom
         ],
       ),

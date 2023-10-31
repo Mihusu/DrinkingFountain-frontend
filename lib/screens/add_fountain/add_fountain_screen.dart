@@ -82,7 +82,7 @@ class AddFountainScreen extends StatelessWidget {
                       onNext: () async {
                         print("\n_____________________________________\n");
                         await player.play(nextButtonAudio);
-                        //await Future.delayed(Duration(seconds: 1));
+                        await Future.delayed(Duration(seconds: 1));
                         print("\n_____________________________________\n");
                         Navigator.push(
                           context,

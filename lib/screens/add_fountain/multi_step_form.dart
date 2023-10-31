@@ -1,5 +1,6 @@
 // PATH: lib/screens/add_fountain/multi_step_form.dart
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:toerst/models/fountain.dart';
 import 'package:toerst/screens/add_fountain/form_overview.dart';
@@ -43,9 +44,10 @@ class _MultiStepFormState extends State<MultiStepForm> {
     setState(() {
       imageBase64Format = image;
       if (currentStep == 0) {
-        // Check if it's the first step
-        isNextButtonEnabled = true; // Enable the button after capturing image
+        isNextButtonEnabled = true;
       }
+      stepContents![0] =
+          CapturePhotoButton(imageBase64: image, onImageCaptured: _setImage);
     });
   }
 
@@ -96,7 +98,7 @@ class _MultiStepFormState extends State<MultiStepForm> {
     super.initState();
 
     stepContents = [
-      CapturePhotoButton(imageFile: null, onImageCaptured: _setImage),
+      CapturePhotoButton(imageBase64: null, onImageCaptured: _setImage),
       FountainTypeSelector(
         fountainTypes: FountainTypes.values,
         onTypeSelected: _setType,
