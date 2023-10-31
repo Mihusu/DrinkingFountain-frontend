@@ -2,13 +2,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geocoding/geocoding.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as device_Location;
 import 'package:toerst/models/fountain_location.dart';
 import 'package:toerst/models/nearest_fountain.dart';
 import 'package:toerst/screens/focus_fountain/focus_fountain_screen.dart';
 import 'package:toerst/screens/map/widgets/bottom_app_bar.dart';
+import 'package:toerst/services/fetch_address_from_coordinates.dart';
 import 'package:toerst/services/location_manager.dart';
 import 'package:toerst/widgets/google_map.dart';
 
@@ -122,6 +124,10 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       for (var json in jsonList) {
         final FountainLocation location = FountainLocation.fromJson(json);
 
+        String address = await fetchAddressFromCoordinates(
+                location.latitude, location.longitude) ??
+            "No Address Found";
+
         _markers.add(
           Marker(
             markerId: MarkerId(
@@ -139,7 +145,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                   ),
                 )
               },
-              title: 'Fountain ${location.id}',
+              title: address,
               snippet: 'Distance ${location.distance.toStringAsFixed(2)} km',
             ),
           ),
@@ -171,6 +177,12 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
       final nearestFountains =
           jsonList.map((json) => NearestFountain.fromJson(json)).toList();
+
+      await Future.forEach(nearestFountains,
+          (NearestFountain fountainData) async {
+        fountainData.address = await fetchAddressFromCoordinates(
+            fountainData.latitude, fountainData.longitude);
+      });
 
       setState(() {
         _nearestFountains.addAll(nearestFountains);
@@ -236,10 +248,11 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   Future<void> _goToCurrentLocation() async {
-    final location = Location();
+    final location = device_Location.Location();
+    ;
     final hasPermission = await location.hasPermission();
 
-    if (hasPermission == PermissionStatus.denied) {
+    if (hasPermission == device_Location.PermissionStatus.denied) {
       await location.requestPermission();
     }
 

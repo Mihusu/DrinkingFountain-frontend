@@ -60,7 +60,7 @@ class FountainList extends StatelessWidget {
   Column _buildListItemTextColumn(NearestFountain fountainData) {
     final String distance = fountainData.distance.toStringAsFixed(2);
     final String distanceText = "$distance km";
-    const String address = "address ...";
+    final String address = fountainData.address ?? "Address not Found";
     final int starRating = fountainData.score.toInt();
 
     return Column(
@@ -73,7 +73,14 @@ class FountainList extends StatelessWidget {
             (index) => Icon(Icons.star, size: 15.0, color: listedItemTextColor),
           ),
         ),
-        const Text(address),
+        SizedBox(
+          width: double.infinity, // or a specific width
+          child: Text(
+            address,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1, // You can adjust this to show more or fewer lines
+          ),
+        ),
       ],
     );
   }

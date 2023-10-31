@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 //Secure storage
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:toerst/models/fountain_location.dart';
 
 class FocusFountainScreen extends StatelessWidget {
   final FlutterSecureStorage secureStorage;
