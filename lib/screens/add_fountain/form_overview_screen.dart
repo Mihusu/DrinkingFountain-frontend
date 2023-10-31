@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:toerst/models/fountain.dart';
-import 'package:geocoding/geocoding.dart'; // Import the geocoding package
+import 'package:toerst/services/fetch_address_from_coordinates.dart'; // Import fetch_address_from_coordinates
 import 'package:toerst/widgets/standard_button.dart';
 
 // Declare constants for easy adjustments
@@ -37,37 +37,18 @@ class _FormOverviewState extends State<FormOverview> {
   @override
   void initState() {
     super.initState();
-    _fetchAddressFromCoordinates();
+    _updateAddress(); // <-- Replaced _fetchAddressFromCoordinates with _updateAddress
   }
 
-  Future<void> _fetchAddressFromCoordinates() async {
-    try {
-      // Fetch placemarks (locations) based on latitude and longitude
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-          widget.fountainData.latitude, widget.fountainData.longitude);
+  // <-- Added this function to update the address using the utility function
+  Future<void> _updateAddress() async {
+    String? address = await fetchAddressFromCoordinates(
+        widget.fountainData.latitude, widget.fountainData.longitude);
 
-      // Check if placemarks are available
-      if (placemarks.isNotEmpty) {
-        // Take the first placemark from the list
-        final placemark = placemarks.first;
-
-        // Extract various components of the address
-        final street = placemark.street;
-        final city = placemark.locality;
-        final state = placemark.administrativeArea;
-        final postalCode = placemark.postalCode;
-
-        // Update the address state variable and refresh UI
-        setState(() {
-          _address = "$street, $city, $state $postalCode";
-        });
-      } else {
-        // Log a message if no address is found
-        print('No address found for the provided coordinates.');
-      }
-    } catch (e) {
-      // Log any errors that occur during the fetch
-      print('Error occurred: $e');
+    if (address != null) {
+      setState(() {
+        _address = address;
+      });
     }
   }
 

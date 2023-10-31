@@ -1,11 +1,9 @@
 // PATH: lib/screens/add_fountain/multi_step_form.dart
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:toerst/models/fountain.dart';
-import 'package:toerst/screens/add_fountain/form_overview.dart';
+import 'package:toerst/screens/add_fountain/form_overview_screen.dart';
 import 'package:toerst/screens/add_fountain/widgets/address_input_widget.dart';
-import 'package:toerst/screens/add_fountain/widgets/address_typing_field.dart';
 import 'package:toerst/screens/add_fountain/widgets/back_to_map_button.dart';
 import 'package:toerst/screens/add_fountain/widgets/capture_photo_button.dart';
 import 'package:toerst/screens/add_fountain/widgets/fountain_rating_bar.dart';
@@ -105,11 +103,9 @@ class _MultiStepFormState extends State<MultiStepForm> {
       ),
 
       FountainRatingBar(onRatingChanged: _setRating),
-      //AddressSearchWidget(onLocationSelected: _setLocation),
-      AddressInputWidget(
-          onAddressSelected: _setLocation), // Use the widget here
+      AddressInputWidget(onAddressSelected: _setLocation),
       CustomTextField(charLimit: 200, onReviewSubmitted: _setReview),
-      // ... Add more steps as needed
+      // Add more steps here
     ];
   }
 

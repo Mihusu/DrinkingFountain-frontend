@@ -1,7 +1,6 @@
 // PATH: lib/screens/map/widgets/add_fountain_button.dart
 import 'package:flutter/material.dart';
-import 'package:toerst/screens/add_fountain/multi_step_form.dart';
-import 'package:toerst/screens/add_fountain/step_1_add_photo_screen.dart';
+import 'package:toerst/screens/add_fountain/multi_step_form_screen.dart';
 import 'package:toerst/widgets/general_floating_action_button.dart';
 import 'package:toerst/themes/app_colors.dart';
 
@@ -17,7 +16,6 @@ class AddFountainButton extends StatelessWidget {
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 const MultiStepForm(),
-            //AddPhotoScreen(imageFile: null,),
             settings: const RouteSettings(
               name: '/add_photo_screen',
             ),
