@@ -4,6 +4,15 @@ import 'package:toerst/models/fountain.dart';
 import 'package:toerst/services/fetch_address_from_coordinates.dart'; // Utility to fetch address
 import 'package:toerst/widgets/standard_button.dart';
 
+// Http
+import 'package:http/http.dart' as http;
+
+//env file
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+//Secure storage
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 // Declare constants for easy adjustments and maintainability
 const double imageScaleFactor = 1.35;
 const double imagePadding = 22.0;
@@ -25,6 +34,7 @@ class FormOverview extends StatefulWidget {
 
 class _FormOverviewState extends State<FormOverview> {
   String? _address; // Local state variable for address
+  final secureStorage = new FlutterSecureStorage();
 
   // Decode the base64 image string to an Image widget
   Image? _decodeImage(String? base64String) {
@@ -66,6 +76,49 @@ class _FormOverviewState extends State<FormOverview> {
         ),
       ),
     );
+  }
+
+  Future<void> saveFountainRequest() async {
+    final apiKey = dotenv.env['API_KEY'] ?? 'default';
+    final ip = dotenv.env['BACKEND_IP'] ?? 'default';
+
+    final url = 'http://$ip/fountain/request';
+
+    Map data = {
+      'longitude': widget.fountainData.longitude,
+      'latitude': widget.fountainData.latitude,
+      'type':  "FILLING",//'FILLING' or 'DRINKING' as String,
+      // 'review': widget.fountainData.review,
+      'score': widget.fountainData.rating,
+      'base64Images': widget.fountainData.imageBase64Format
+    };
+    
+    var body = json.encode(data);
+
+    String? jwt = await secureStorage.read(key: "JWT");
+
+    if(jwt == null){
+      //GO to login
+      return;
+    }
+
+    final headers = <String, String>{
+      'Api-Key': apiKey,
+      'Content-Type': 'application/json',
+      'Authorization': jwt
+    };
+
+
+    final response = await http.post(Uri.parse(url), headers: headers, body: body);
+
+    print("Result:");
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      //Fountian request send
+    } else {
+      //Something went wrong
+    }
   }
 
   // Build method for UI
@@ -146,6 +199,7 @@ class _FormOverviewState extends State<FormOverview> {
               label: 'Submit',
               onPressed: () async {
                 // Connect here to Backend perhaps
+                saveFountainRequest();
               },
               backgroundColor: Colors.blue,
               textColor: Colors.white,

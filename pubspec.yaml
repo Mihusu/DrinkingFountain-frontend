@@ -51,7 +51,7 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  http: ^1.1.0
+  http: ^0.13.6
 
 dev_dependencies:
   flutter_test:
@@ -63,7 +63,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/themes/silverMapTheme.json
-    - assets/.env
+    - .env
     - assets/sounds/add_Fountain_button_sound.mp3
     - assets/sounds/next_button_sound.mp3
   uses-material-design: true

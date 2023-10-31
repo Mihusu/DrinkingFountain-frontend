@@ -8,6 +8,7 @@ import 'package:location/location.dart';
 import 'package:toerst/models/fountain_location.dart';
 import 'package:toerst/models/nearest_fountain.dart';
 import 'package:toerst/screens/focus_fountain/focus_fountain_screen.dart';
+import 'package:toerst/screens/map/widgets/add_fountain_button.dart';
 import 'package:toerst/screens/map/widgets/bottom_app_bar.dart';
 import 'package:toerst/services/location_manager.dart';
 import 'package:toerst/widgets/google_map.dart';
@@ -194,7 +195,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   void _loadMapStyle() {
-    rootBundle.loadString('assets/silverMapTheme.json').then((string) {
+    rootBundle.loadString('assets/themes/silverMapTheme.json').then((string) {
       setState(() {
         _mapStyle = string;
       });
@@ -235,7 +236,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     }
   }
 
-  Future<void> _goToCurrentLocation() async {
+   Future<void> _goToCurrentLocation() async {
     final location = Location();
     final hasPermission = await location.hasPermission();
 
@@ -248,7 +249,16 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     if (currentLocation.latitude != null && currentLocation.longitude != null) {
       final target =
           LatLng(currentLocation.latitude!, currentLocation.longitude!);
-      _mapController.animateCamera(CameraUpdate.newLatLng(target));
+
+      // Combine position and zoom into a single CameraPosition
+      final cameraPosition = CameraPosition(
+        target: target,
+        zoom: 16.0,
+      );
+
+      // Update the camera position in one go
+      await _mapController
+          .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
     } else {
       if (kDebugMode) {
         print("Latitude and Longitude are null");
@@ -273,9 +283,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
           text: _sheetPropertiesMap[_getCurrentState()]!.text,
           action: _sheetPropertiesMap[_getCurrentState()]!.action,
           secureStorage: secureStorage),
-
-      //floatingActionButton: const CustomFloatingButton(),
-
+      floatingActionButton: const AddFountainButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Stack(
         children: [
