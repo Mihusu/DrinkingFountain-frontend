@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:toerst/models/fountain_location.dart';
+import 'package:toerst/models/nearest_fountain.dart';
+import 'package:toerst/screens/focus_fountain/focus_fountain_screen.dart';
 import 'package:toerst/screens/map/widgets/bottom_app_bar.dart';
 import 'package:toerst/services/location_manager.dart';
 import 'package:toerst/widgets/google_map.dart';
@@ -51,6 +53,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   late Animation<double> _animation;
   LatLng? _initialCameraPosition;
   final Set<Marker> _markers = Set<Marker>();
+  final List<NearestFountain> _nearestFountains = [];
   final secureStorage = new FlutterSecureStorage();
 
   Map<SheetPositionState, SheetProperties> _sheetPropertiesMap = {};
@@ -91,7 +94,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
         setState(() {
           _loading = false;
         });
-        createMarkers();
+        createMarkers(initialLocation);
+        createNearestFountains(initialLocation);
       });
     } else {
       setState(() {
@@ -101,12 +105,14 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   // Function to generate random markers
-  Future<void> createMarkers() async {
+  Future<void> createMarkers(position) async {
     final apiKey = dotenv.env['API_KEY'] ?? 'default';
     final ip = dotenv.env['BACKEND_IP'] ?? 'default';
     final headers = <String, String>{'Api-Key': apiKey};
-    final url = 'http://$ip/fountain/map';
-    print(url);
+    final double latitude = position.latitude;
+    final double longitude = position.longitude;
+    final url =
+        'http://$ip/fountain/map?longitude=$longitude&latitude=$latitude';
 
     final response = await http.get(Uri.parse(url), headers: headers);
 
@@ -122,13 +128,52 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                 'marker${location.id}'), // Use a unique ID for each marker
             position: LatLng(location.latitude, location.longitude),
             infoWindow: InfoWindow(
+              onTap: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FocusFountainScreen(
+                      secureStorage: secureStorage,
+                      fountainId: location.id,
+                    ),
+                  ),
+                )
+              },
               title: 'Fountain ${location.id}',
-              snippet: 'Marker ${location.id}',
+              snippet: 'Distance ${location.distance.toStringAsFixed(2)} km',
             ),
           ),
         );
       }
       setState(() {
+        _loading = false;
+      });
+    } else {
+      if (kDebugMode) {
+        print("Api failed");
+      }
+    }
+  }
+
+  Future<void> createNearestFountains(position) async {
+    final apiKey = dotenv.env['API_KEY'] ?? 'default';
+    final ip = dotenv.env['BACKEND_IP'] ?? 'default';
+    final headers = <String, String>{'Api-Key': apiKey};
+    final double latitude = position.latitude;
+    final double longitude = position.longitude;
+    final url =
+        'http://$ip/fountain/nearest/list?longitude=$longitude&latitude=$latitude';
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = json.decode(response.body);
+
+      final nearestFountains =
+          jsonList.map((json) => NearestFountain.fromJson(json)).toList();
+
+      setState(() {
+        _nearestFountains.addAll(nearestFountains);
         _loading = false;
       });
     } else {
@@ -258,6 +303,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
             listedItemColor: listedItemColor,
             listedItemBorderColor: listedItemBorderColor,
             listedItemTextColor: listedItemTextColor,
+            loading: _loading,
+            nearestFountains: _nearestFountains,
           ),
         ],
       ),
