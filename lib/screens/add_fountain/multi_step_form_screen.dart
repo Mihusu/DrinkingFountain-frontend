@@ -10,26 +10,29 @@ import 'package:toerst/screens/add_fountain/widgets/fountain_rating_bar.dart';
 import 'package:toerst/screens/add_fountain/widgets/fountain_type_selector.dart';
 import 'package:toerst/screens/add_fountain/widgets/step_indicator.dart';
 import 'package:toerst/screens/add_fountain/widgets/text_input_field.dart';
-import 'package:toerst/screens/add_fountain/widgets/navigation_buttons.dart'; // Import navigation buttons
+import 'package:toerst/screens/add_fountain/widgets/navigation_buttons.dart';
 import 'package:toerst/config/fountain_types.dart';
 
-/// [MultiStepForm] is a widget that encapsulates a multi-step form process.
-/// Each step has its own content and navigation controls.
+// Define a StatefulWidget named MultiStepForm
 class MultiStepForm extends StatefulWidget {
+  // Default constructor
   const MultiStepForm({super.key});
 
+  // Create state for this widget
   @override
   _MultiStepFormState createState() => _MultiStepFormState();
 }
 
+// Define the state class for MultiStepForm
 class _MultiStepFormState extends State<MultiStepForm> {
-  bool isNextButtonEnabled = false; // Initialize as false
-  int currentStep = 0;
-  String selectedFountainType = 'regularDrinkingFountainIcon';
-  List<Widget>? stepContents;
+  // Variable to manage the "Next" button's enabled state
+  bool isNextButtonEnabled = false;
 
-  // Fountain field variables
-  String? selectedAddress; // For display in FormOverview
+  // Variable to manage the current step index
+  int currentStep = 0;
+
+  // Variables to hold user input data for each step
+  String? selectedAddress;
   String? imageBase64Format;
   String? type;
   double? rating;
@@ -37,112 +40,82 @@ class _MultiStepFormState extends State<MultiStepForm> {
   double? longitude;
   String? review;
 
-  // callback methods
+  // Callback to set the image base64 string
   void _setImage(String image) {
     setState(() {
       imageBase64Format = image;
       if (currentStep == 0) {
         isNextButtonEnabled = true;
       }
-      stepContents![0] =
-          CapturePhotoButton(imageBase64: image, onImageCaptured: _setImage);
     });
   }
 
+  // Callback to set the fountain type
   void _setType(String chosenType) {
     setState(() {
       type = chosenType;
     });
   }
 
+  // Callback to set the fountain rating
   void _setRating(double givenRating) {
     setState(() {
       rating = givenRating;
     });
   }
 
+  // Callback to set the location data
   void _setLocation(String description, double lat, double lon) {
     setState(() {
       selectedAddress = description;
       latitude = lat;
       longitude = lon;
       if (currentStep == 3) {
-        // Check if it's the fourth step (0-indexed)
-        isNextButtonEnabled = true; // Enable the button after inserting address
+        isNextButtonEnabled = true;
       }
     });
   }
 
+  // Callback to set the review text
   void _setReview(String userReview) {
     setState(() {
       review = userReview;
     });
   }
 
-  // Adjust the behavior of the Next button based on the current step and data
+  // Function to handle the "Next" button's enabled state
   void _handleNextButton() {
+    // Check conditions to enable or disable the "Next" button
     if (currentStep == 0 && imageBase64Format == null) {
-      isNextButtonEnabled = false; // Ensure button is disabled if no image
+      isNextButtonEnabled = false;
     } else if (currentStep == 3 &&
         (selectedAddress == null || latitude == null || longitude == null)) {
-      isNextButtonEnabled = false; // Ensure button is disabled if no address
+      isNextButtonEnabled = false;
     } else {
-      isNextButtonEnabled = true; // Enable in all other scenarios
+      isNextButtonEnabled = true;
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    stepContents = [
-      CapturePhotoButton(imageBase64: null, onImageCaptured: _setImage),
-      FountainTypeSelector(
-        fountainTypes: FountainTypes.values,
-        onTypeSelected: _setType,
-      ),
-
-      FountainRatingBar(onRatingChanged: _setRating),
-      AddressInputWidget(onAddressSelected: _setLocation),
-      CustomTextField(charLimit: 200, onReviewSubmitted: _setReview),
-      // Add more steps here
-    ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildAppBar(),
-              _buildStepContent(),
-              _buildNavigationButtons(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
+  // Function to build the custom AppBar
   Widget _buildAppBar() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
+          // Back button
           const Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               BackToMapButton(),
             ],
           ),
+          // Step indicator
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 25.0),
             child: SizedBox(
               width: 250,
               child: StepIndicator(
-                totalSteps: stepContents!.length,
+                totalSteps: 5,
                 currentStep: currentStep,
               ),
             ),
@@ -152,7 +125,8 @@ class _MultiStepFormState extends State<MultiStepForm> {
     );
   }
 
-  Widget _buildStepContent() {
+  // Function to build the step content
+  Widget _buildStepContent(List<Widget> stepContents) {
     return Column(
       children: [
         Padding(
@@ -163,23 +137,27 @@ class _MultiStepFormState extends State<MultiStepForm> {
             style: const TextStyle(fontSize: 18.0),
           ),
         ),
+        // Display the current step's widget
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.5,
           child: Center(
-            child: stepContents![currentStep],
+            child: stepContents[currentStep],
           ),
         ),
       ],
     );
   }
 
+  // Function to build the navigation buttons
   Widget _buildNavigationButtons() {
-    _handleNextButton(); // Call this function to manage the Next button's state
+    // Handle the "Next" button's enabled state
+    _handleNextButton();
     return Padding(
       padding: const EdgeInsets.only(bottom: 30.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // "Previous" button
           if (currentStep > 0)
             PreviousButton(
               onPressed: () {
@@ -188,16 +166,18 @@ class _MultiStepFormState extends State<MultiStepForm> {
                 });
               },
             ),
+          // Spacer
           if (currentStep > 0) const SizedBox(width: 40.0),
+          // "Next" button
           NextButton(
-            enabled: isNextButtonEnabled, // Pass the button state to NextButton
+            enabled: isNextButtonEnabled,
             onNext: () {
-              if (currentStep < stepContents!.length - 1) {
+              if (currentStep < 4) {
                 setState(() {
                   currentStep++;
                 });
               } else {
-                // All steps are complete
+                // Create Fountain object and navigate
                 Fountain fountainData = Fountain(
                   imageBase64Format: imageBase64Format ?? "Unknown",
                   type: type ?? "Unknown",
@@ -216,6 +196,42 @@ class _MultiStepFormState extends State<MultiStepForm> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  // Main build function
+  @override
+  Widget build(BuildContext context) {
+    // Create list of step widgets
+    List<Widget> stepContents = [
+      CapturePhotoButton(
+          imageBase64: imageBase64Format, onImageCaptured: _setImage),
+      FountainTypeSelector(
+        initialType: type,
+        fountainTypes: FountainTypes.values,
+        onTypeSelected: _setType,
+      ),
+      FountainRatingBar(
+        initialRating: rating,
+        onRatingChanged: _setRating,
+      ),
+      AddressInputWidget(onAddressSelected: _setLocation),
+      CustomTextField(charLimit: 200, onReviewSubmitted: _setReview),
+    ];
+
+    // Return the main Scaffold
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildAppBar(),
+              _buildStepContent(stepContents),
+              _buildNavigationButtons(),
+            ],
+          ),
+        ),
       ),
     );
   }

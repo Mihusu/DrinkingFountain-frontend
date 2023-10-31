@@ -1,10 +1,10 @@
-import 'dart:convert';
+import 'dart:convert'; // For decoding base64 image
 import 'package:flutter/material.dart';
 import 'package:toerst/models/fountain.dart';
-import 'package:toerst/services/fetch_address_from_coordinates.dart'; // Import fetch_address_from_coordinates
+import 'package:toerst/services/fetch_address_from_coordinates.dart'; // Utility to fetch address
 import 'package:toerst/widgets/standard_button.dart';
 
-// Declare constants for easy adjustments
+// Declare constants for easy adjustments and maintainability
 const double imageScaleFactor = 1.35;
 const double imagePadding = 22.0;
 const double containerInnerPadding = 8.0;
@@ -12,8 +12,10 @@ const double cardOuterPadding = 16.0;
 const double buttonBottomPadding = 40.0;
 const double containerBottomPadding = 16.0;
 
+// StatefulWidget to maintain mutable state
 class FormOverview extends StatefulWidget {
-  final Fountain fountainData;
+  final Fountain
+      fountainData; // Data to be displayed, passed from previous screen
 
   const FormOverview({super.key, required this.fountainData});
 
@@ -22,8 +24,9 @@ class FormOverview extends StatefulWidget {
 }
 
 class _FormOverviewState extends State<FormOverview> {
-  String? _address;
+  String? _address; // Local state variable for address
 
+  // Decode the base64 image string to an Image widget
   Image? _decodeImage(String? base64String) {
     if (base64String == null) return null;
     try {
@@ -37,21 +40,22 @@ class _FormOverviewState extends State<FormOverview> {
   @override
   void initState() {
     super.initState();
-    _updateAddress(); // <-- Replaced _fetchAddressFromCoordinates with _updateAddress
+    _updateAddress(); // Fetch the address when the widget initializes
   }
 
-  // <-- Added this function to update the address using the utility function
+  // Fetch the address based on the latitude and longitude
   Future<void> _updateAddress() async {
     String? address = await fetchAddressFromCoordinates(
         widget.fountainData.latitude, widget.fountainData.longitude);
 
     if (address != null) {
       setState(() {
-        _address = address;
+        _address = address; // Update the state variable if address is fetched
       });
     }
   }
 
+  // Utility widget to build star rating based on the rating value
   Widget _buildStarRating(int rating) {
     return Row(
       children: List.generate(
@@ -64,6 +68,7 @@ class _FormOverviewState extends State<FormOverview> {
     );
   }
 
+  // Build method for UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +79,7 @@ class _FormOverviewState extends State<FormOverview> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Navigate back
           },
         ),
         title: const Text(
@@ -101,6 +106,7 @@ class _FormOverviewState extends State<FormOverview> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Display the image at the top
                           Padding(
                             padding: const EdgeInsets.all(imagePadding),
                             child: Align(
@@ -117,15 +123,15 @@ class _FormOverviewState extends State<FormOverview> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          Text('${widget.fountainData.type}'),
+                          Text(widget.fountainData.type),
                           const SizedBox(height: 10),
                           _buildStarRating(
-                              (widget.fountainData.rating ?? 0).toInt()),
+                              (widget.fountainData.rating).toInt()),
                           const SizedBox(height: 10),
-                          Text('${_address ?? 'Could not fetch address.'}'),
+                          Text(_address ?? 'Could not fetch address.'),
                           const SizedBox(height: 10),
-                          Text(
-                              '${widget.fountainData.review ?? 'No review provided.'}'),
+                          Text(widget.fountainData.review ??
+                              'No review provided.'),
                         ],
                       ),
                     ),
@@ -138,8 +144,8 @@ class _FormOverviewState extends State<FormOverview> {
             padding: const EdgeInsets.only(bottom: buttonBottomPadding),
             child: StandardButton(
               label: 'Submit',
-              onPressed: () {
-                // Submit data to the backend
+              onPressed: () async {
+                // Connect here to Backend perhaps
               },
               backgroundColor: Colors.blue,
               textColor: Colors.white,

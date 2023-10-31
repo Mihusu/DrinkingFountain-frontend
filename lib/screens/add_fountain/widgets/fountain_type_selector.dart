@@ -9,11 +9,13 @@ typedef OnTypeSelected = void Function(String chosenType);
 class FountainTypeSelector extends StatefulWidget {
   final List<FountainType> fountainTypes;
   final OnTypeSelected onTypeSelected;
+  final String? initialType; // Add this field to accept an initial type
 
   const FountainTypeSelector({
     Key? key,
     required this.fountainTypes,
     required this.onTypeSelected,
+    this.initialType, // Add this parameter
   }) : super(key: key);
 
   @override
@@ -26,9 +28,8 @@ class _FountainTypeSelectorState extends State<FountainTypeSelector> {
   @override
   void initState() {
     super.initState();
-    if (widget.fountainTypes.isNotEmpty) {
-      chosenType = widget.fountainTypes.first.id;
-    }
+    // Use the initialType if provided, else default to the first type
+    chosenType = widget.initialType ?? widget.fountainTypes.first.id;
   }
 
   @override
