@@ -1,7 +1,7 @@
+// PATH: lib/screens/add_fountain/widgets/address_input_widget.dart
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:toerst/themes/app_colors.dart';
-import 'package:toerst/widgets/standard_button.dart'; // Importing the StandardButton
+import 'package:toerst/screens/add_fountain/widgets/submit_address_button.dart';
 
 class AddressInputWidget extends StatelessWidget {
   final Function(String, double, double) onAddressSelected;
@@ -50,7 +50,7 @@ class AddressInputWidget extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(height: 10), // Spacer for better UI
+          const SizedBox(height: 40.0), // Spacer for better UI
           SubmitAddressButton(
             onPressed: () async {
               await _getCoordinatesFromAddress(
@@ -59,25 +59,6 @@ class AddressInputWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class SubmitAddressButton extends StatelessWidget {
-  final VoidCallback onPressed;
-
-  const SubmitAddressButton({Key? key, required this.onPressed})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return StandardButton(
-      borderColor: secondaryButtonBorderColor,
-      backgroundColor: secondaryButtonColor,
-      textColor: secondaryButtonTextColor,
-      label: 'Submit Address',
-      onPressed: onPressed,
-      // Add other properties of the StandardButton as required
     );
   }
 }

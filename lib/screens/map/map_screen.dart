@@ -1,4 +1,4 @@
-// lib/main.dart
+// PATH: lib/screens/map/map_screen.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,9 +14,6 @@ import 'package:toerst/services/location_manager.dart';
 import 'package:toerst/widgets/google_map.dart';
 
 // Import widgets
-// import 'package:toerst/widgets/floating_action_button.dart';
-// import 'package:toerst/screens/map/widgets/bottom_app_bar.dart';
-// import 'widgets/google_map.dart';
 import 'package:toerst/screens/map/widgets/draggable_fountain_list.dart';
 //import 'screens/map/widgets/user_location_button.dart';
 
@@ -236,7 +233,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     }
   }
 
-   Future<void> _goToCurrentLocation() async {
+  Future<void> _goToCurrentLocation() async {
     final location = Location();
     final hasPermission = await location.hasPermission();
 

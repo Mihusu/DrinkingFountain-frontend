@@ -1,4 +1,4 @@
-// file: lib/services/location_service.dart
+// PATH: lib/services/location_service.dart
 import 'package:flutter/foundation.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

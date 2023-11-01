@@ -14,10 +14,10 @@ class NextButton extends StatelessWidget {
   final bool enabled;
 
   const NextButton({
-    Key? key,
+    super.key,
     required this.onNext,
     this.enabled = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +25,9 @@ class NextButton extends StatelessWidget {
       label: 'Next',
       onPressed:
           enabled ? onNext : () {}, // Providing an empty function when disabled
-      backgroundColor:
-          enabled ? (secondaryButtonColor ?? Colors.blue) : Colors.grey,
-      borderColor: enabled
-          ? (secondaryButtonBorderColor ?? Colors.blue[700]!)
-          : Colors.grey[400]!,
-      textColor: enabled
-          ? (secondaryButtonTextColor ?? Colors.white)
-          : Colors.grey[600]!,
+      backgroundColor: enabled ? (secondaryButtonColor) : Colors.grey,
+      borderColor: enabled ? (secondaryButtonBorderColor) : Colors.grey[400]!,
+      textColor: enabled ? (secondaryButtonTextColor) : Colors.grey[600]!,
     );
   }
 }

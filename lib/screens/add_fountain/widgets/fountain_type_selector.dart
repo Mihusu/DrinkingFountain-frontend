@@ -1,186 +1,148 @@
+// Import necessary packages and models
 import 'package:flutter/material.dart';
 import 'package:toerst/models/fountain_type.dart'; // Import the FountainType model
-import 'package:toerst/themes/app_colors.dart'; // Import color definitions
 
-// Define a function type for the callback when a type is selected
+// Define constants for easy adjustment
+const double iconSpacing = 8.0; // Spacing between icons
+const double iconWidth = 64.0; // Width of icons including padding
+const double iconRadius = 32.0; // Radius of the circle avatar
+const double iconSize = 48.0; // Size of the icon inside the circle avatar
+const double containerPaddingHorizontal =
+    10.0; // Horizontal padding of the container
+const double containerPaddingVertical =
+    8.0; // Vertical padding of the container
+const double textSpacing = 16.0; // Spacing between text widgets
+const int animationDurationMilliseconds =
+    150; // Duration of animation in milliseconds
+const double titleDescriptionSpacing =
+    16.0; // Spacing between title and description
+const double titleFontSize = 24.0; // Font size of title
+const double descriptionSpacing =
+    8.0; // Spacing between description and next widget
+const double descriptionFontSize = 16.0; // Font size of description
+
+// Type definition for the callback function when a type is selected
 typedef OnTypeSelected = void Function(String chosenType);
 
-// Create a StatefulWidget named FountainTypeSelector
+// StatefulWidget to create an interactive fountain type selector
 class FountainTypeSelector extends StatefulWidget {
-  final List<FountainType> fountainTypes;
-  final OnTypeSelected onTypeSelected;
-  final String? initialType; // Add this field to accept an initial type
+  final List<FountainType> fountainTypes; // List of fountain types
+  final OnTypeSelected onTypeSelected; // Callback function for type selection
+  final String? initialType; // Optional initial selected type
 
+  // Constructor to initialize the fields
   const FountainTypeSelector({
-    Key? key,
+    super.key,
     required this.fountainTypes,
     required this.onTypeSelected,
-    this.initialType, // Add this parameter
-  }) : super(key: key);
+    this.initialType,
+  });
 
+  // Create the state object for this widget
   @override
   _FountainTypeSelectorState createState() => _FountainTypeSelectorState();
 }
 
+// State class for the FountainTypeSelector widget
 class _FountainTypeSelectorState extends State<FountainTypeSelector> {
-  late String chosenType;
+  late String chosenType; // Currently selected type
+  double offset = 0; // Horizontal offset for the blue circle
 
+  // Initialize the state object
   @override
   void initState() {
     super.initState();
-    // Use the initialType if provided, else default to the first type
+    // Set the initial chosen type, or default to the first type if none is provided
     chosenType = widget.initialType ?? widget.fountainTypes.first.id;
+    // Find the index of the initial chosen type to calculate its offset
+    final index =
+        widget.fountainTypes.indexWhere((type) => type.id == chosenType);
+    // Calculate the initial offset based on the index
+    offset = iconWidth * index + iconSpacing * index;
   }
 
+  // Build the UI for this widget
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+          padding: const EdgeInsets.symmetric(
+              horizontal: containerPaddingHorizontal,
+              vertical: containerPaddingVertical),
           decoration: BoxDecoration(
-            color: Colors.grey.shade300, // Grey container
-            borderRadius:
-                BorderRadius.circular(50.0), // Completely rounded corners
+            color: Colors.grey.shade300,
+            borderRadius: BorderRadius.circular(50.0),
           ),
-          child: Wrap(
-            spacing: 8.0, // spacing between the icons
-            children: widget.fountainTypes.map((FountainType type) {
-              bool isSelected = chosenType == type.id;
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    chosenType = type.id;
-                    widget.onTypeSelected(chosenType);
-                  });
-                },
-                child: CircleAvatar(
-                  backgroundColor:
-                      isSelected ? Colors.blue : Colors.transparent,
-                  child: Icon(
-                    type.icon.icon,
-                    color: isSelected ? Colors.white : Colors.black,
-                    size: 48.0,
-                  ),
-                  radius: 30.0, // Adjust as needed
+          child: Stack(
+            children: [
+              // Animated container to move the blue circle
+              AnimatedContainer(
+                duration:
+                    const Duration(milliseconds: animationDurationMilliseconds),
+                // Translate the blue circle horizontally based on the offset
+                transform: Matrix4.translationValues(offset, 0, 0),
+                child: const CircleAvatar(
+                  backgroundColor: Colors.blue,
+                  radius: iconRadius,
                 ),
-              );
-            }).toList(),
-          ),
-        ),
-        const SizedBox(height: 16),
-        // Display the title and description of the chosen fountain type
-        Text(
-          widget.fountainTypes
-              .firstWhere((type) => type.id == chosenType)
-              .title,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.blue,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          widget.fountainTypes
-              .firstWhere((type) => type.id == chosenType)
-              .description,
-          style: const TextStyle(
-            fontSize: 16,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-
-
-
-
-/*
-import 'package:flutter/material.dart';
-import 'package:toerst/models/fountain_type.dart'; // Import the FountainType model
-import 'package:toerst/themes/app_colors.dart'; // Import color definitions
-
-// Define a function type for the callback when a type is selected
-typedef OnTypeSelected = void Function(String chosenType);
-
-// Create a StatefulWidget named FountainTypeSelector
-class FountainTypeSelector extends StatefulWidget {
-  final List<FountainType> fountainTypes;
-  final OnTypeSelected onTypeSelected;
-
-  const FountainTypeSelector({
-    Key? key,
-    required this.fountainTypes,
-    required this.onTypeSelected,
-  }) : super(key: key);
-
-  @override
-  _FountainTypeSelectorState createState() => _FountainTypeSelectorState();
-}
-
-class _FountainTypeSelectorState extends State<FountainTypeSelector> {
-  late String chosenType;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.fountainTypes.isNotEmpty) {
-      chosenType = widget.fountainTypes.first.id;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Wrap(
-          spacing: 8.0, // spacing between the icons
-          children: widget.fountainTypes.map((FountainType type) {
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  chosenType = type.id;
-                  widget.onTypeSelected(chosenType);
-                });
-              },
-              child: Column(
-                children: [
-                  Icon(
-                    type.icon.icon,
-                    color: chosenType == type.id ? Colors.blue : Colors.grey,
-                    size: 48.0,
-                  ),
-                  Text(type.title)
-                ],
               ),
-            );
-          }).toList(),
+              // Wrap widget to layout the icons horizontally with spacing
+              Wrap(
+                spacing: iconSpacing,
+                children: widget.fountainTypes.map((FountainType type) {
+                  bool isSelected = chosenType == type.id;
+                  return GestureDetector(
+                    onTap: () {
+                      // Find the index of the tapped type to calculate its offset
+                      final index = widget.fountainTypes.indexOf(type);
+                      // Calculate the new offset based on the index
+                      final newOffset = iconWidth * index + iconSpacing * index;
+                      // Update the state to reflect the new chosen type and offset
+                      setState(() {
+                        chosenType = type.id;
+                        offset = newOffset;
+                        widget.onTypeSelected(chosenType);
+                      });
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      radius: iconRadius,
+                      child: Icon(
+                        type.icon.icon,
+                        color: isSelected ? Colors.white : Colors.black,
+                        size: iconSize,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 16),
-        // Display the title and description of the chosen fountain type
+        const SizedBox(height: textSpacing),
+        // Display the title of the chosen fountain type
+        const SizedBox(height: titleDescriptionSpacing), // Adjusted spacing
         Text(
           widget.fountainTypes
               .firstWhere((type) => type.id == chosenType)
               .title,
           style: const TextStyle(
-            fontSize: 24,
+            fontSize: titleFontSize, // Adjusted font size
             fontWeight: FontWeight.bold,
             color: Colors.blue,
           ),
         ),
-        const SizedBox(height: 8),
+        // Spacing between title and description
+        const SizedBox(height: descriptionSpacing), // Adjusted spacing
+        // Display the description of the chosen fountain type
         Text(
           widget.fountainTypes
               .firstWhere((type) => type.id == chosenType)
               .description,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: descriptionFontSize, // Adjusted font size
             fontStyle: FontStyle.italic,
           ),
         ),
@@ -188,195 +150,3 @@ class _FountainTypeSelectorState extends State<FountainTypeSelector> {
     );
   }
 }
-*/
-/*
-import 'package:flutter/material.dart';
-import 'package:toerst/models/fountain_type.dart'; // Import the FountainType model
-import 'package:toerst/themes/app_colors.dart'; // Import color definitions
-
-// Define a function type for the callback when a type is selected
-typedef OnTypeSelected = void Function(String chosenType);
-
-// Create a StatefulWidget named FountainTypeSelector
-class FountainTypeSelector extends StatefulWidget {
-  final List<FountainType> fountainTypes;
-  final OnTypeSelected onTypeSelected;
-
-  const FountainTypeSelector({
-    Key? key,
-    required this.fountainTypes,
-    required this.onTypeSelected,
-  }) : super(key: key);
-
-  @override
-  _FountainTypeSelectorState createState() => _FountainTypeSelectorState();
-}
-
-class _FountainTypeSelectorState extends State<FountainTypeSelector> {
-  late String chosenType;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.fountainTypes.isNotEmpty) {
-      chosenType = widget.fountainTypes.first.id;
-    }
-  }
-
-  // Function to get the title and description of the chosen fountain type
-  Map<String, String> getDescriptionAndTitle() {
-    final type = widget.fountainTypes.firstWhere(
-      (type) => type.id == chosenType,
-      orElse: () => FountainType(
-        id: '',
-        icon: const Icon(Icons.error),
-        description: 'Unknown',
-        title: 'Error',
-      ),
-    );
-    return {'title': type.title, 'description': type.description};
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final typeDetails =
-        getDescriptionAndTitle(); // Get the title and description
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        DropdownButton<String>(
-          value: chosenType,
-          items: widget.fountainTypes.map((FountainType type) {
-            return DropdownMenuItem<String>(
-              value: type.id,
-              child: Text(type.title),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            if (newValue != null) {
-              setState(() {
-                chosenType = newValue;
-              });
-              widget.onTypeSelected(
-                  chosenType); // notify the parent widget about the selection
-            }
-          },
-        ),
-        const SizedBox(height: 16),
-        // Display the title of the chosen fountain type
-        Text(
-          typeDetails['title']!,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.blue,
-          ),
-        ),
-        const SizedBox(
-            height: 8), // Add some spacing between the title and description
-        // Display the description of the chosen fountain type
-        Text(
-          typeDetails['description']!,
-          style: const TextStyle(
-            fontSize: 16,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-      ],
-    );
-  }
-}
-*/
-
-
-/*
-
-import 'package:flutter/material.dart';
-import 'package:toerst/models/fountain_type.dart'; // Import the FountainType model
-import 'package:toerst/themes/app_colors.dart'; // Import color definitions
-
-// Define a function type for the callback when a type is selected
-typedef OnTypeSelected = void Function(String chosenType);
-
-// Create a StatefulWidget named FountainTypeSelector
-class FountainTypeSelector extends StatefulWidget {
-  final List<FountainType> fountainTypes;
-  final OnTypeSelected onTypeSelected;
-
-  const FountainTypeSelector({
-    Key? key,
-    required this.fountainTypes,
-    required this.onTypeSelected,
-  }) : super(key: key);
-
-  @override
-  _FountainTypeSelectorState createState() {
-    
-    return _FountainTypeSelectorState(
-    
-  );
-  }
-}
-
-class _FountainTypeSelectorState extends State<FountainTypeSelector> {
-  late String chosenType;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.fountainTypes.isNotEmpty) {
-      chosenType = widget.fountainTypes.first.id;
-    }
-  }
-
-  // Function to get the title and description of the chosen fountain type
-  Map<String, String> getDescriptionAndTitle() {
-    final type = widget.fountainTypes.firstWhere(
-      (type) => type.id == chosenType,
-      orElse: () => FountainType(
-        id: '',
-        icon: const Icon(Icons.error),
-        description: 'Unknown',
-        title: 'Error',
-      ),
-    );
-    return {'title': type.title, 'description': type.description};
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final typeDetails = getDescriptionAndTitle();  // Get the title and description
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IntrinsicWidth(
-          child: Container(
-            // ... rest of the code ...
-          ),
-        ),
-        const SizedBox(height: 16),
-        // Display the title of the chosen fountain type
-        Text(
-          typeDetails['title']!,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.blue,
-          ),
-        ),
-        const SizedBox(height: 8),  // Add some spacing between the title and description
-        // Display the description of the chosen fountain type
-        Text(
-          typeDetails['description']!,
-          style: const TextStyle(
-            fontSize: 16,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-      ],
-    );
-  }
-}
-*/

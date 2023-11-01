@@ -36,12 +36,18 @@ class _FormOverviewState extends State<FormOverview> {
   String? _address; // Local state variable for address
   final secureStorage = new FlutterSecureStorage();
 
-  // Decode the base64 image string to an Image widget
+  // This function takes a base64 encoded string and converts it into an Image widget.
+  // If the string is null or decoding fails, it returns null.
   Image? _decodeImage(String? base64String) {
+    // Check if the input base64String is null. If it is, return null.
     if (base64String == null) return null;
+
     try {
+      // Attempt to decode the base64 encoded string to a Uint8List,
+      // and then create an Image widget from it.
       return Image.memory(base64Decode(base64String));
     } catch (e) {
+      // If decoding fails, print an error message and return null.
       print("Failed to decode base64 image: $e");
       return null;
     }
@@ -78,46 +84,57 @@ class _FormOverviewState extends State<FormOverview> {
     );
   }
 
+// Asynchronous function to send a request to save fountain information to the backend.
   Future<void> saveFountainRequest() async {
+    // Retrieve API key and backend IP address from environment variables, or set to 'default' if not found.
     final apiKey = dotenv.env['API_KEY'] ?? 'default';
     final ip = dotenv.env['BACKEND_IP'] ?? 'default';
 
+    // Construct the URL for the API request.
     final url = 'http://$ip/fountain/request';
 
+    // Prepare the data payload with fountain information.
     Map data = {
-      'longitude': widget.fountainData.longitude,
-      'latitude': widget.fountainData.latitude,
-      'type':  "FILLING",//'FILLING' or 'DRINKING' as String,
-      // 'review': widget.fountainData.review,
-      'score': widget.fountainData.rating,
-      'base64Images': widget.fountainData.imageBase64Format
+      'longitude': widget.fountainData.longitude, // Longitude of the fountain
+      'latitude': widget.fountainData.latitude, // Latitude of the fountain
+      'type': widget.fountainData
+          .type, // Type of the fountain (e.g., 'FILLING' or 'DRINKING')
+      'score': widget.fountainData.rating, // User rating for the fountain
+      'base64Images': widget.fountainData
+          .imageBase64Format // Base64 encoded image(s) of the fountain
     };
-    
+
+    // Encode the data payload to a JSON-formatted string.
     var body = json.encode(data);
 
+    // Retrieve the JWT token for authorization from secure storage.
     String? jwt = await secureStorage.read(key: "JWT");
 
-    if(jwt == null){
-      //GO to login
+    // Check if JWT token exists. If not, return early (presumably to go to login).
+    if (jwt == null) {
       return;
     }
 
+    // Prepare the HTTP headers, including API key, content type, and authorization token.
     final headers = <String, String>{
       'Api-Key': apiKey,
       'Content-Type': 'application/json',
       'Authorization': jwt
     };
 
+    // Make the HTTP POST request to save the fountain information.
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
 
-    final response = await http.post(Uri.parse(url), headers: headers, body: body);
-
+    // Print the HTTP status code for debugging purposes.
     print("Result:");
     print(response.statusCode);
 
+    // Check the response status code to determine the outcome of the request.
     if (response.statusCode == 200) {
-      //Fountian request send
+      // Fountain request was successfully sent.
     } else {
-      //Something went wrong
+      // Something went wrong with sending the fountain request.
     }
   }
 
@@ -181,7 +198,7 @@ class _FormOverviewState extends State<FormOverview> {
                           _buildStarRating(
                               (widget.fountainData.rating).toInt()),
                           const SizedBox(height: 10),
-                          Text(_address ?? 'Could not fetch address.'),
+                          Text(_address ?? ''),
                           const SizedBox(height: 10),
                           Text(widget.fountainData.review ??
                               'No review provided.'),
