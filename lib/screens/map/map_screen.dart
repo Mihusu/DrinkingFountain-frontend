@@ -2,24 +2,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:toerst/models/fountain_location.dart';
 import 'package:toerst/models/nearest_fountain.dart';
-import 'package:toerst/screens/focus_fountain/focus_fountain_screen.dart';
+import 'package:toerst/screens/view_fountain/view_fountain_screen.dart';
 import 'package:toerst/screens/map/widgets/add_fountain_button.dart';
 import 'package:toerst/screens/map/widgets/bottom_app_bar.dart';
-import 'package:toerst/services/location_manager.dart';
+import 'package:toerst/services/location_service.dart';
 import 'package:toerst/widgets/google_map.dart';
-
+import 'package:toerst/services/network_service.dart';
 // Import widgets
 import 'package:toerst/screens/map/widgets/draggable_fountain_list.dart';
-//import 'screens/map/widgets/user_location_button.dart';
-
-// Http
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+// import 'screens/map/widgets/user_location_button.dart';
 
 // env file
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -30,11 +25,8 @@ import 'package:toerst/config/draggable_sheet_constants.dart';
 import 'package:toerst/config/sheet_properties.dart';
 import 'package:toerst/themes/app_colors.dart';
 
-//Secure storage
+// Secure storage
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-// Import services
-// import 'package:toerst/services/location_manager.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -85,99 +77,22 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
   void _initialize() async {
     final locationService = LocationService();
+    final networkService = NetworkService();
     final initialLocation = await locationService.fetchInitialLocation();
     if (initialLocation != null) {
+      final markers = await networkService.createMarkers(initialLocation);
+      final nearestFountains =
+          await networkService.createNearestFountains(initialLocation);
       setState(() {
         _initialCameraPosition = initialLocation;
-        setState(() {
-          _loading = false;
-        });
-        createMarkers(initialLocation);
-        createNearestFountains(initialLocation);
-      });
-    } else {
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
-
-  // Function to generate random markers
-  Future<void> createMarkers(position) async {
-    final apiKey = dotenv.env['API_KEY'] ?? 'default';
-    final ip = dotenv.env['BACKEND_IP'] ?? 'default';
-    final headers = <String, String>{'Api-Key': apiKey};
-    final double latitude = position.latitude;
-    final double longitude = position.longitude;
-    final url =
-        'http://$ip/fountain/map?longitude=$longitude&latitude=$latitude';
-
-    final response = await http.get(Uri.parse(url), headers: headers);
-
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
-
-      for (var json in jsonList) {
-        final FountainLocation location = FountainLocation.fromJson(json);
-
-        _markers.add(
-          Marker(
-            markerId: MarkerId(
-                'marker${location.id}'), // Use a unique ID for each marker
-            position: LatLng(location.latitude, location.longitude),
-            infoWindow: InfoWindow(
-              onTap: () => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FocusFountainScreen(
-                      secureStorage: secureStorage,
-                      fountainId: location.id,
-                    ),
-                  ),
-                )
-              },
-              title: 'Fountain ${location.id}',
-              snippet: 'Distance ${location.distance.toStringAsFixed(2)} km',
-            ),
-          ),
-        );
-      }
-      setState(() {
-        _loading = false;
-      });
-    } else {
-      if (kDebugMode) {
-        print("Api failed");
-      }
-    }
-  }
-
-  Future<void> createNearestFountains(position) async {
-    final apiKey = dotenv.env['API_KEY'] ?? 'default';
-    final ip = dotenv.env['BACKEND_IP'] ?? 'default';
-    final headers = <String, String>{'Api-Key': apiKey};
-    final double latitude = position.latitude;
-    final double longitude = position.longitude;
-    final url =
-        'http://$ip/fountain/nearest/list?longitude=$longitude&latitude=$latitude';
-
-    final response = await http.get(Uri.parse(url), headers: headers);
-
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
-
-      final nearestFountains =
-          jsonList.map((json) => NearestFountain.fromJson(json)).toList();
-
-      setState(() {
+        _markers.addAll(markers);
         _nearestFountains.addAll(nearestFountains);
         _loading = false;
       });
     } else {
-      if (kDebugMode) {
-        print("Api failed");
-      }
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
@@ -234,32 +149,16 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   Future<void> _goToCurrentLocation() async {
-    final location = Location();
-    final hasPermission = await location.hasPermission();
+    final locationService = LocationService();
+    final target = await locationService.getCurrentLocation();
 
-    if (hasPermission == PermissionStatus.denied) {
-      await location.requestPermission();
-    }
-
-    final currentLocation = await location.getLocation();
-
-    if (currentLocation.latitude != null && currentLocation.longitude != null) {
-      final target =
-          LatLng(currentLocation.latitude!, currentLocation.longitude!);
-
-      // Combine position and zoom into a single CameraPosition
+    if (target != null) {
       final cameraPosition = CameraPosition(
         target: target,
         zoom: 16.0,
       );
-
-      // Update the camera position in one go
       await _mapController
           .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-    } else {
-      if (kDebugMode) {
-        print("Latitude and Longitude are null");
-      }
     }
   }
 
@@ -275,11 +174,11 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
     return Scaffold(
       bottomNavigationBar: CustomBottomAppBar(
-          // Set the properties for the left button on the buttom app bar:
-          icon: _sheetPropertiesMap[_getCurrentState()]!.icon,
-          text: _sheetPropertiesMap[_getCurrentState()]!.text,
-          action: _sheetPropertiesMap[_getCurrentState()]!.action,
-          secureStorage: secureStorage),
+        icon: _sheetPropertiesMap[_getCurrentState()]!.icon,
+        text: _sheetPropertiesMap[_getCurrentState()]!.text,
+        action: _sheetPropertiesMap[_getCurrentState()]!.action,
+        secureStorage: secureStorage,
+      ),
       floatingActionButton: const AddFountainButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Stack(

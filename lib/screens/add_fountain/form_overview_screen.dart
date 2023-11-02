@@ -14,12 +14,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // Declare constants for easy adjustments and maintainability
-const double imageScaleFactor = 1.35;
+const double imageScaleFactor = 1.2;
 const double imagePadding = 22.0;
 const double containerInnerPadding = 8.0;
 const double cardOuterPadding = 16.0;
 const double buttonBottomPadding = 40.0;
-const double containerBottomPadding = 16.0;
+const double containerBottomPadding = 0.0;
 
 // StatefulWidget to maintain mutable state
 class FormOverview extends StatefulWidget {
@@ -63,7 +63,9 @@ class _FormOverviewState extends State<FormOverview> {
   Future<void> _updateAddress() async {
     String? address = await fetchAddressFromCoordinates(
         widget.fountainData.latitude, widget.fountainData.longitude);
-
+//    print('\n\n');
+//    print(address);
+//    print('\n\n');
     if (address != null) {
       setState(() {
         _address = address; // Update the state variable if address is fetched
@@ -198,7 +200,7 @@ class _FormOverviewState extends State<FormOverview> {
                           _buildStarRating(
                               (widget.fountainData.rating).toInt()),
                           const SizedBox(height: 10),
-                          Text(_address ?? ''),
+                          Text(_address ?? 'No fountain found'),
                           const SizedBox(height: 10),
                           Text(widget.fountainData.review ??
                               'No review provided.'),
