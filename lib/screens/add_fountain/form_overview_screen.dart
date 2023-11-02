@@ -7,7 +7,7 @@ import 'package:toerst/widgets/standard_button.dart';
 // Http
 import 'package:http/http.dart' as http;
 
-//env file
+// Env file
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 //Secure storage
@@ -86,6 +86,7 @@ class _FormOverviewState extends State<FormOverview> {
     );
   }
 
+// TODO: Refactor this to network_services.dart
 // Asynchronous function to send a request to save fountain information to the backend.
   Future<void> saveFountainRequest() async {
     // Retrieve API key and backend IP address from environment variables, or set to 'default' if not found.
@@ -217,7 +218,6 @@ class _FormOverviewState extends State<FormOverview> {
             child: StandardButton(
               label: 'Submit',
               onPressed: () async {
-                // Connect here to Backend perhaps
                 saveFountainRequest();
               },
               backgroundColor: Colors.blue,

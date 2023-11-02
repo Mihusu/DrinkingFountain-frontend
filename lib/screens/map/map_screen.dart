@@ -10,6 +10,7 @@ import 'package:toerst/screens/view_fountain/view_fountain_screen.dart';
 import 'package:toerst/screens/map/widgets/add_fountain_button.dart';
 import 'package:toerst/screens/map/widgets/bottom_app_bar.dart';
 import 'package:toerst/services/location_service.dart';
+import 'package:toerst/services/map_style_service.dart';
 import 'package:toerst/widgets/google_map.dart';
 import 'package:toerst/services/network_service.dart';
 // Import widgets
@@ -45,6 +46,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   final Set<Marker> _markers = Set<Marker>();
   final List<NearestFountain> _nearestFountains = [];
   final secureStorage = new FlutterSecureStorage();
+  final MapStyleService _mapStyleService =
+      MapStyleService(); // Create an instance of MapStyleService
 
   Map<SheetPositionState, SheetProperties> _sheetPropertiesMap = {};
 
@@ -69,7 +72,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
         action: () => snapSheet(middlePosition),
       ),
     };
-    _loadMapStyle();
+
     _initializeAnimationController();
   }
 
@@ -78,6 +81,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   void _initialize() async {
     final locationService = LocationService();
     final networkService = NetworkService();
+    _mapStyle = await _mapStyleService
+        .loadMapStyle('assets/themes/silverMapTheme.json'); // Load map style
     final initialLocation = await locationService.fetchInitialLocation();
     if (initialLocation != null) {
       final markers = await networkService.createMarkers(initialLocation);
@@ -106,21 +111,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     }
   }
 
-  void _loadMapStyle() {
-    rootBundle.loadString('assets/themes/silverMapTheme.json').then((string) {
-      setState(() {
-        _mapStyle = string;
-      });
-    });
-  }
-
-  void _initializeAnimationController() {
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: animationDuration.toInt()),
-    );
-  }
-
   void snapSheet(double targetPosition) {
     _animation = Tween<double>(begin: _sheetPosition, end: targetPosition)
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut))
@@ -146,6 +136,13 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     } else {
       return bottomPosition;
     }
+  }
+
+  void _initializeAnimationController() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: animationDuration.toInt()),
+    );
   }
 
   Future<void> _goToCurrentLocation() async {
