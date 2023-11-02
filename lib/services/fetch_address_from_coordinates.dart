@@ -1,3 +1,4 @@
+// PATH: lib/services/fetch_address_from_coordinates.dart
 import 'package:geocoding/geocoding.dart';
 
 Future<String?> fetchAddressFromCoordinates(
@@ -21,6 +22,8 @@ Future<String?> fetchAddressFromCoordinates(
       // Form the complete address
       return "$street, $city, $state $postalCode";
     } else {
+      // Log a message if no address is found
+      print('No address found for the provided coordinates.');
       return null;
     }
   } catch (e) {

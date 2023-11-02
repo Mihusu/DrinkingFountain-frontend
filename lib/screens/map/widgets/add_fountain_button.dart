@@ -1,20 +1,43 @@
-// File: lib/screens/map_screen/widgets/add_fountain_button.dart
+// PATH: lib/screens/map/widgets/add_fountain_button.dart
 import 'package:flutter/material.dart';
+import 'package:toerst/screens/add_fountain/multi_step_form_screen.dart';
 import 'package:toerst/widgets/general_floating_action_button.dart';
 import 'package:toerst/themes/app_colors.dart';
 
 class AddFountainButton extends StatelessWidget {
-  final VoidCallback onPressed;
-
-  const AddFountainButton({required this.onPressed, Key? key})
-      : super(key: key);
+  const AddFountainButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GeneralFloatingActionButton(
-      onPressed: onPressed,
+      onPressed: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const MultiStepForm(),
+            settings: const RouteSettings(
+              name: '/add_photo_screen',
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              const begin = Offset(0.0, 1.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOut;
+
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
+        );
+      },
       backgroundColor: addFountainButtonColor,
-      borderColor: Colors.blue,
+      borderColor: addFountainButtonBorderColor,
       borderWidth: 3.0,
       padding: 25.0,
       child: Transform.rotate(
@@ -22,6 +45,7 @@ class AddFountainButton extends StatelessWidget {
         child: const Icon(
           Icons.add_location_alt_rounded,
           size: 36.0,
+          color: addFountainButtonIconColor,
         ),
       ),
     );

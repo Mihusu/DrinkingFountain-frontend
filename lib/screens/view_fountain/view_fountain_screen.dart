@@ -17,7 +17,7 @@ class FocusFountainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //Contians the build in back button
+        //Contains the build in back button
         title: const Text('Fountain'),
       ),
       body: Center(
