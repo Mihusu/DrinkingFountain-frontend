@@ -75,6 +75,8 @@ class _MultiStepFormState extends State<MultiStepForm> {
     } else if (currentStep == 3 &&
         (selectedAddress == null || latitude == null || longitude == null)) {
       isNextButtonEnabled = false;
+    } else if (currentStep == 2 && rating == null) {
+      isNextButtonEnabled = false;
     } else {
       isNextButtonEnabled = true;
     }
