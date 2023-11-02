@@ -1,5 +1,3 @@
-// lib/screens/map/widgets/draggable_fountain_list.dart
-
 import 'package:flutter/material.dart';
 import 'package:toerst/models/nearest_fountain.dart';
 import 'fountain_list.dart'; // Ensure this import is correct

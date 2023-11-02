@@ -100,8 +100,8 @@ class _FormOverviewState extends State<FormOverview> {
     Map data = {
       'longitude': widget.fountainData.longitude, // Longitude of the fountain
       'latitude': widget.fountainData.latitude, // Latitude of the fountain
-      'type': widget.fountainData
-          .type, // Type of the fountain (e.g., 'FILLING' or 'DRINKING')
+      'type': widget.fountainData.type, // Type of the fountain (e.g., 'FILLING' or 'DRINKING')
+      'review': widget.fountainData.review,
       'score': widget.fountainData.rating, // User rating for the fountain
       'base64Images': widget.fountainData
           .imageBase64Format // Base64 encoded image(s) of the fountain
@@ -124,6 +124,8 @@ class _FormOverviewState extends State<FormOverview> {
       'Content-Type': 'application/json',
       'Authorization': jwt
     };
+
+    print(body);
 
     // Make the HTTP POST request to save the fountain information.
     final response =
