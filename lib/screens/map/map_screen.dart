@@ -150,7 +150,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   Future<void> _goToCurrentLocation() async {
-    
+    final locationService = LocationService();
     final target = await locationService.getCurrentLocation();
 
     if (target != null) {
