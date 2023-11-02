@@ -2,8 +2,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as device_Location;
 import 'package:toerst/models/fountain_location.dart';
 import 'package:toerst/models/nearest_fountain.dart';
 import 'package:toerst/screens/view_fountain/view_fountain_screen.dart';
