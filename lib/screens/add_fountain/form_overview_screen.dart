@@ -23,8 +23,7 @@ const double containerBottomPadding = 0.0;
 
 // StatefulWidget to maintain mutable state
 class FormOverview extends StatefulWidget {
-  final Fountain
-      fountainData; // Data to be displayed, passed from previous screen
+  final Fountain fountainData; // Data to be displayed, passed from previous screen
 
   const FormOverview({super.key, required this.fountainData});
 

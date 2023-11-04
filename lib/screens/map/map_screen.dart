@@ -81,9 +81,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     final networkService = NetworkService();
     final initialLocation = await locationService.fetchInitialLocation();
     if (initialLocation != null) {
-      final markers = await networkService.createMarkers(initialLocation);
-      final nearestFountains =
-          await networkService.createNearestFountains(initialLocation);
+      if (!context.mounted) return; //Cant load if build context is not mounted
+      final markers = await networkService.createMarkers(context, initialLocation);
+      final nearestFountains =await networkService.createNearestFountains(initialLocation);
       setState(() {
         _initialCameraPosition = initialLocation;
         _markers.addAll(markers);
