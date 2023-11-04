@@ -5,54 +5,61 @@ import 'package:toerst/models/viewed_fountain.dart';
 
 class ReviewCard extends StatelessWidget {
   final ReviewDTO review;
+  final double screenHeight;
 
-  ReviewCard({required this.review});
+  const ReviewCard({
+    required this.review,
+    required this.screenHeight,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 3, // Add elevation for a shadow effect
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  review.username,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Card(
+        elevation: 3, // Add elevation for a shadow effect
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    review.username,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                Text(
-                  review.type,
-                  style: TextStyle(
-                    color: Colors.grey,
+                  SizedBox(height: screenHeight * 0.01),
+                  Row(
+                    children: List.generate(
+                      review.stars,
+                      (index) => const Icon(Icons.star,
+                          size: 25.0, color: Colors.black),
+                    ),
                   ),
-                ),
-                Text(
-                  review.text,
-                ),
-                Row(
-                  children: List.generate(
-                    review.stars,
-                    (index) =>
-                        Icon(Icons.star, size: 20.0, color: Colors.black),
+                  SizedBox(height: screenHeight * 0.01),
+                  Text(
+                    review.text,
                   ),
-                ),
-                Text(
-                  "Posted on: ${review.createdAt.toLocal()}",
-                  style: TextStyle(
-                    color: Colors.grey,
+                  SizedBox(height: screenHeight * 0.01),
+                  Text(
+                    "Posted on: ${review.createdAt.toLocal()}",
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
