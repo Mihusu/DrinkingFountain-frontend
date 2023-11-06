@@ -10,8 +10,8 @@ class FocusFountainScreen extends StatelessWidget {
   const FocusFountainScreen({
     required this.secureStorage,
     required this.fountainId,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

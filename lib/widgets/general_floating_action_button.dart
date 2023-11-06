@@ -16,8 +16,8 @@ class GeneralFloatingActionButton extends StatelessWidget {
     this.borderColor = Colors.transparent,
     this.borderWidth = 0.0,
     this.padding = 0.0,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

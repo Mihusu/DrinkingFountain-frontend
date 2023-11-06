@@ -34,7 +34,7 @@ class FormOverview extends StatefulWidget {
 
 class _FormOverviewState extends State<FormOverview> {
   String? _address; // Local state variable for address
-  final secureStorage = new FlutterSecureStorage();
+  final secureStorage = const FlutterSecureStorage();
 
   // This function takes a base64 encoded string and converts it into an Image widget.
   // If the string is null or decoding fails, it returns null.

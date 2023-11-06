@@ -6,8 +6,7 @@ import 'package:toerst/screens/add_fountain/widgets/submit_address_button.dart';
 class AddressInputWidget extends StatelessWidget {
   final Function(String, double, double) onAddressSelected;
 
-  const AddressInputWidget({Key? key, required this.onAddressSelected})
-      : super(key: key);
+  const AddressInputWidget({super.key, required this.onAddressSelected});
 
   Future<void> _getCoordinatesFromAddress(String address) async {
     try {
@@ -32,7 +31,7 @@ class AddressInputWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
+          SizedBox(
             width:
                 MediaQuery.of(context).size.width * 0.7, // 70% of screen width
             child: TextField(

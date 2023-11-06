@@ -10,8 +10,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 //Secure storage
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:toerst/screens/profile/profile_screen.dart';
+import 'package:toerst/widgets/standard_button.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -20,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _loginFailed = false;
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final secureStorage = new FlutterSecureStorage();
+  final secureStorage = const FlutterSecureStorage();
 
   Future<bool> login() async {
     final apiKey = dotenv.env['API_KEY'] ?? 'default';
@@ -58,6 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         //Contians the build in back button
         title: const Text('Login Screen'),
+        backgroundColor: Colors.black,
       ),
       body: Center(
         child: Column(
@@ -87,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
 
             // Login Button
-            ElevatedButton(
+            StandardButton(
               onPressed: () async {
                 bool loginSuccess = await login();
                 if (loginSuccess) {
@@ -108,7 +112,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   });
                 }
               },
-              child: const Text('Login'),
+
+              label:'Login',
+              textColor: Colors.white,
+              backgroundColor: Colors.black,
+              width: 120,
             ),
             // Conditional widget to show "Login Failed" message
             if (_loginFailed)

@@ -1,11 +1,13 @@
 // PATH: lib/services/network_service.dart
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:toerst/models/fountain_location.dart';
 import 'package:toerst/models/nearest_fountain.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:toerst/models/viewed_fountain.dart';
 import 'package:toerst/services/location_service.dart';
 
 class NetworkService {
@@ -75,5 +77,24 @@ class NetworkService {
     }
 
     return nearestFountains;
+  }
+
+  Future<List<CurrentFountain>> getUnapproveFountains() async {
+    final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+    String? jwt = await secureStorage.read(key: 'JWT') ?? 'Default';
+    final headers = <String, String>{'Api-Key': apiKey, 'Authorization': jwt};
+    final url =
+        'http://$ip/fountain/unapproved';
+        
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+    final List<CurrentFountain> fountains = [];
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = json.decode(response.body);
+      fountains.addAll(
+          jsonList.map((json) => CurrentFountain.fromJson(json)).toList());
+    }
+    return fountains;
   }
 }
