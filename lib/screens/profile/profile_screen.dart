@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 //Secure storage
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:toerst/screens/approve/approve_screen.dart';
-import 'package:toerst/screens/approve/approve_screen_detail.dart';
+import 'package:toerst/screens/approve_fountain/approve_screen.dart';
 import 'package:toerst/widgets/standard_button.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -61,7 +60,7 @@ class ProfileScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => FountainSwiper(
+                          builder: (context) => ApproveScreen(
                             
                           ),
                         ),
