@@ -23,7 +23,8 @@ const double containerBottomPadding = 0.0;
 
 // StatefulWidget to maintain mutable state
 class FormOverview extends StatefulWidget {
-  final Fountain fountainData; // Data to be displayed, passed from previous screen
+  final Fountain
+      fountainData; // Data to be displayed, passed from previous screen
 
   const FormOverview({super.key, required this.fountainData});
 
@@ -98,7 +99,8 @@ class _FormOverviewState extends State<FormOverview> {
     Map data = {
       'longitude': widget.fountainData.longitude, // Longitude of the fountain
       'latitude': widget.fountainData.latitude, // Latitude of the fountain
-      'type': widget.fountainData.type, // Type of the fountain (e.g., 'FILLING' or 'DRINKING')
+      'type': widget.fountainData
+          .type, // Type of the fountain (e.g., 'FILLING' or 'DRINKING')
       'review': widget.fountainData.review,
       'score': widget.fountainData.rating, // User rating for the fountain
       'base64Images': widget.fountainData

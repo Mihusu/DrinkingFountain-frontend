@@ -1,5 +1,6 @@
 // PATH: lib/services/network_service.dart
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -101,5 +102,20 @@ class NetworkService {
       print("Api failed");
     }
     throw Exception("Failed to retrieve data from the API");
+  }
+
+  Future<int> createNewReview(jwt, body) async {
+    final headers = <String, String>{
+      'Api-Key': apiKey,
+      'Authorization': jwt,
+      'Content-Type': 'application/json',
+    };
+
+    final url = 'http://$ip/review/create';
+
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
+    print(response.statusCode);
+    return response.statusCode;
   }
 }

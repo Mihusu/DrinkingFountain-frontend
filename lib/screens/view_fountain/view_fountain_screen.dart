@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:toerst/models/viewed_fountain.dart';
+import 'package:toerst/screens/review/create_review_screen.dart';
 import 'package:toerst/screens/view_fountain/widgets/review_card.dart';
 import 'package:toerst/services/location_service.dart';
 import 'package:toerst/services/network_service.dart';
@@ -81,8 +82,8 @@ class _FocusFountainScreenState extends State<FocusFountainScreen> {
               CrossAxisAlignment.center, // Center content horizontally
           children: _loading
               ? _loadingWidget(screenHeight, screenWidth)
-              : _fountainView(
-                  screenHeight, screenWidth, _fountainData, _address),
+              : _fountainView(screenHeight, screenWidth, _fountainData,
+                  _address, context, widget.fountainId),
         ),
       ),
     );
@@ -104,7 +105,8 @@ List<Widget> _loadingWidget(screenHeight, screenWidth) {
   ];
 }
 
-List<Widget> _fountainView(screenHeight, screenWidth, _fountainData, _address) {
+List<Widget> _fountainView(
+    screenHeight, screenWidth, _fountainData, _address, context, fountainId) {
   Uint8List bytes = base64.decode(_fountainData!.fountainImages[0].base64);
 
   return <Widget>[
@@ -140,7 +142,15 @@ List<Widget> _fountainView(screenHeight, screenWidth, _fountainData, _address) {
     SizedBox(height: screenHeight * 0.025),
     StandardButton(
       label: "Rate This Fountain",
-      onPressed: () => print(_fountainData!.reviews[0].username),
+      onPressed: () => {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CreateReviewScreen(
+              fountainId: fountainId,
+            ),
+          ),
+        )
+      },
       borderColor: Colors.black,
     ),
     Expanded(
