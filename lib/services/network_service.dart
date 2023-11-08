@@ -16,8 +16,7 @@ class NetworkService {
   final String apiKey = dotenv.env['API_KEY'] ?? 'default';
   final String ip = dotenv.env['BACKEND_IP'] ?? 'default';
 
-  Future<Set<Marker>> createMarkers(
-      BuildContext context, LatLng position) async {
+  Future<Set<Marker>> createMarkers(BuildContext context, LatLng position) async {
     final locationService = LocationService();
     final headers = <String, String>{'Api-Key': apiKey};
     final double latitude = position.latitude;
@@ -123,7 +122,7 @@ class NetworkService {
     return fountains;
   }
 
-Future<void> approveFountain(int id) async {
+  Future<void> approveFountain(int id) async {
     const FlutterSecureStorage secureStorage = FlutterSecureStorage();
     String? jwt = await secureStorage.read(key: 'JWT') ?? 'Default';
     final headers = <String, String>{'Api-Key': apiKey, 'Authorization': jwt};
@@ -146,6 +145,7 @@ Future<void> approveFountain(int id) async {
         print('Error approving entity: $error');
     }
   }
+  
   Future<void> unApproveFountain(int id) async {
     const FlutterSecureStorage secureStorage = FlutterSecureStorage();
     String? jwt = await secureStorage.read(key: 'JWT') ?? 'Default';
