@@ -6,7 +6,7 @@ import 'package:toerst/models/fountain_type.dart';
 class FountainTypes {
   static List<FountainType> values = [
     FountainType(
-        id: 'REGULAR',
+        id: 'DRINKING',
         icon: const Icon(Icons.local_drink, size: 40),
         description: 'Select this for stand-up sips directly from the source.',
         title: 'Regular Drinking Fountain'),

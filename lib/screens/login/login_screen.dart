@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //Contians the build in back button
+        //Contains the build in back button
         title: const Text('Login Screen'),
         backgroundColor: Colors.black,
       ),
@@ -112,7 +112,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   });
                 }
               },
-
               label:'Login',
               textColor: Colors.white,
               backgroundColor: Colors.black,
@@ -120,6 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             // Conditional widget to show "Login Failed" message
             if (_loginFailed)
+              const SizedBox(height: 20,),
               const Center(
                 child: Text('Login Failed'),
               ),
