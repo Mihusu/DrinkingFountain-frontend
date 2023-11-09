@@ -121,15 +121,9 @@ class _FormOverviewState extends State<FormOverview> {
       'Authorization': jwt
     };
 
-    print(body);
-
     // Make the HTTP POST request to save the fountain information.
     final response =
         await http.post(Uri.parse(url), headers: headers, body: body);
-
-    // Print the HTTP status code for debugging purposes.
-    print("Result:");
-    print(response.statusCode);
 
     // Check the response status code to determine the outcome of the request.
     if (response.statusCode == 200) {
