@@ -159,7 +159,7 @@ class NetworkService {
         }),
         headers: headers
       );
-      print(id);
+      
       if (response.statusCode == 200) {
         print('Entity deleted successfully');
         // Handle success, e.g., show a success message to the user
