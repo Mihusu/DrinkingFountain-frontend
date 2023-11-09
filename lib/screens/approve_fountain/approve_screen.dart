@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
-import 'package:toerst/models/viewed_fountain.dart';
 import 'package:toerst/services/location_service.dart';
 import 'package:toerst/services/network_service.dart';
 import 'package:toerst/widgets/standard_button.dart';
@@ -26,8 +25,7 @@ class _ApproveScreen extends State<ApproveScreen> {
   final List<SwipeItem> _swipeItems = <SwipeItem>[];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   MatchEngine? _matchEngine;
-
-  List<CurrentFountain> fountains = [];
+  bool _emptyList = true;
 
   Future<void> _initialize() async {
     final LocationService locationService = LocationService();
@@ -35,43 +33,44 @@ class _ApproveScreen extends State<ApproveScreen> {
 
     List<SwipeItem> swipeItems = [];
 
-    fountains = fountainData;
-
-    for (int i = 0; i < fountains.length; i++) {
-      for (int j = 0; j < fountains[i].reviews.length; j++) {
-        String username = fountains[i].reviews[j].username;
-        String review = fountains[i].reviews[j].text;
-        String base64Image = fountains[i].fountainImages[j].base64;
-        String address = await locationService.fetchAddress(fountains[i].latitude, fountains[i].longitude) ?? "No Address Found";
+    if(fountainData.isNotEmpty) {
+      _emptyList = false;
+    }
+    for (int i = 0; i < fountainData.length; i++) {
+      for (int j = 0; j < fountainData[i].reviews.length; j++) {
+        String username = fountainData[i].reviews[j].username;
+        String review = fountainData[i].reviews[j].text;
+        Image? base64Image = _decodeImage(fountainData[i].fountainImages[j].base64);
+        String address = await locationService.fetchAddress(fountainData[i].latitude, fountainData[i].longitude) ?? "No Address Found";
 
         swipeItems.add(SwipeItem(
           content: Content(
-            id: fountains[i].id,
+            id: fountainData[i].id,
             username: username,
             imageBase64Format: base64Image,
-            type: fountains[i].type,
-            rating: fountains[i].score,
+            type: fountainData[i].type,
+            rating: fountainData[i].score,
             address: address,
             review: review,
           ),
           likeAction: () async {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
-                  "Liked ${fountains[i].reviews[j].username}'s fountain request"),
+                  "Liked ${fountainData[i].reviews[j].username}'s fountain request"),
               duration: const Duration(milliseconds: 500),
             ));
 
-            await networkService.approveFountain(fountains[i].id);
+            await networkService.approveFountain(fountainData[i].id);
             i--;
             j--;
           },
           nopeAction: () async {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
-                  "Nope ${fountains[i].reviews[j].username}'s fountain request"),
+                  "Nope ${fountainData[i].reviews[j].username}'s fountain request"),
               duration: const Duration(milliseconds: 500),
             ));
-            await networkService.unApproveFountain(fountains[i].id);
+            await networkService.unApproveFountain(fountainData[i].id);
             i--;
             j--;
           },
@@ -94,10 +93,6 @@ class _ApproveScreen extends State<ApproveScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_matchEngine == null) {
-      // Return a loading indicator or handle the null case accordingly
-      return const Center(child: CircularProgressIndicator());
-    }
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -115,7 +110,9 @@ class _ApproveScreen extends State<ApproveScreen> {
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        children: _matchEngine == null 
+        ? <Widget>[ const Center(child: CircularProgressIndicator())]
+        : <Widget>[
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
@@ -132,7 +129,7 @@ class _ApproveScreen extends State<ApproveScreen> {
                       // Display the image at the top
                       SizedBox(
                         height: 500, // Set a fixed height for SwipeCards
-                        child: _swipeItems.isEmpty
+                        child: _emptyList
                         ? const Align(
                             alignment: Alignment.center,
                             child: Text(
@@ -159,9 +156,9 @@ class _ApproveScreen extends State<ApproveScreen> {
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(20.0),
-                                          child: _decodeImage(_swipeItems[index]
+                                          child: _swipeItems[index]
                                                   .content
-                                                  .imageBase64Format) ??
+                                                  .imageBase64Format ??
                                               Container(),
                                         ),
                                       ),
@@ -196,6 +193,9 @@ class _ApproveScreen extends State<ApproveScreen> {
                                   Text("No more drinking or filling fountains"),
                               duration: Duration(milliseconds: 500),
                             ));
+                            setState(() {
+                              _emptyList = true;
+                            });
                           },
                           itemChanged: (SwipeItem item, int index) {
                             print("Fountain request from: ${item.content.username}");
@@ -211,7 +211,7 @@ class _ApproveScreen extends State<ApproveScreen> {
               ),
             ),
           ),
-          _swipeItems.isEmpty 
+          _emptyList 
           ? Container() // Empty container when _swipeItems is empty
           : Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -252,7 +252,7 @@ class _ApproveScreen extends State<ApproveScreen> {
 class Content {
   final int? id;
   final String? username;
-  final String? imageBase64Format; // the image in base 64 format
+  final Image? imageBase64Format; // the image in base 64 format
   final String? type; // type of the fountain
   final double? rating; // rating from flutter_rating_bar
   final double? latitude; // latitude of the fountain
