@@ -5,7 +5,7 @@ import 'package:toerst/screens/map/map_screen.dart';
 import 'package:toerst/themes/app_colors.dart';
 
 class BackToMapButton extends StatelessWidget {
-  const BackToMapButton({Key? key}) : super(key: key);
+  const BackToMapButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +19,8 @@ class BackToMapButton extends StatelessWidget {
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               // Adjusted the begin and end offsets for the slide up transition
-              var begin = Offset(0.0, 1.0); // Start from the bottom
-              var end = Offset(0.0, 0.0); // End at the top
+              var begin = const Offset(0.0, 1.0); // Start from the bottom
+              var end = const Offset(0.0, 0.0); // End at the top
               var curve = Curves.easeInOut;
 
               var tween =

@@ -33,7 +33,7 @@ class FormOverview extends StatefulWidget {
 
 class _FormOverviewState extends State<FormOverview> {
   String? _address; // Local state variable for address
-  final secureStorage = new FlutterSecureStorage();
+  final secureStorage = const FlutterSecureStorage();
 
   // This function takes a base64 encoded string and converts it into an Image widget.
   // If the string is null or decoding fails, it returns null.
@@ -62,9 +62,7 @@ class _FormOverviewState extends State<FormOverview> {
   Future<void> _updateAddress() async {
     String? address = await fetchAddressFromCoordinates(
         widget.fountainData.latitude, widget.fountainData.longitude);
-//    print('\n\n');
-//    print(address);
-//    print('\n\n');
+
     if (address != null) {
       setState(() {
         _address = address; // Update the state variable if address is fetched
@@ -123,15 +121,9 @@ class _FormOverviewState extends State<FormOverview> {
       'Authorization': jwt
     };
 
-    print(body);
-
     // Make the HTTP POST request to save the fountain information.
     final response =
         await http.post(Uri.parse(url), headers: headers, body: body);
-
-    // Print the HTTP status code for debugging purposes.
-    print("Result:");
-    print(response.statusCode);
 
     // Check the response status code to determine the outcome of the request.
     if (response.statusCode == 200) {

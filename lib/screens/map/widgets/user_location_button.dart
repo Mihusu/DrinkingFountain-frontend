@@ -7,8 +7,7 @@ import 'package:toerst/widgets/general_floating_action_button.dart';
 class UserLocationButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const UserLocationButton({required this.onPressed, Key? key})
-      : super(key: key);
+  const UserLocationButton({required this.onPressed, super.key});
 
   @override
   Widget build(BuildContext context) {

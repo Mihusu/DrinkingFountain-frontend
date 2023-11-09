@@ -10,7 +10,7 @@ class StandardButton extends StatelessWidget {
   final double height; // set as non-nullable
 
   const StandardButton({
-    Key? key,
+    super.key,
     required this.label,
     required this.onPressed,
     this.backgroundColor = Colors.transparent,
@@ -18,7 +18,7 @@ class StandardButton extends StatelessWidget {
     this.textColor = Colors.black,
     this.width = 150.0, // default width
     this.height = 50.0, // default height
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

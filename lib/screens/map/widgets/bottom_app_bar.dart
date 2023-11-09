@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:toerst/screens/login/login_screen.dart';
-import 'package:toerst/screens/map/widgets/add_fountain_button.dart';
 import 'package:toerst/screens/profile/profile_screen.dart';
 import 'package:toerst/themes/app_colors.dart';
 
@@ -20,8 +19,8 @@ class CustomBottomAppBar extends StatelessWidget {
     required this.text,
     required this.action,
     required this.secureStorage,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +88,7 @@ class CustomBottomAppBar extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LoginScreen(),
+                          builder: (context) => const LoginScreen(),
                         ),
                       );
                     }
