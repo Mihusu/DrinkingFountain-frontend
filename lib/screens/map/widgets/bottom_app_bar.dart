@@ -19,8 +19,8 @@ class CustomBottomAppBar extends StatelessWidget {
     required this.text,
     required this.action,
     required this.secureStorage,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class CustomBottomAppBar extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LoginScreen(),
+                          builder: (context) => const LoginScreen(),
                         ),
                       );
                     }

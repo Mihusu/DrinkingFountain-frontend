@@ -12,10 +12,10 @@ class CapturePhotoButton extends StatefulWidget {
   final Function(String) onImageCaptured;
 
   const CapturePhotoButton({
-    Key? key,
+    super.key,
     this.imageBase64,
     required this.onImageCaptured,
-  }) : super(key: key);
+  });
 
   @override
   _CapturePhotoButtonState createState() => _CapturePhotoButtonState();
@@ -68,7 +68,7 @@ class _CapturePhotoButtonState extends State<CapturePhotoButton> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No cameras available')),
+        const SnackBar(content: Text('No cameras available')),
       );
     }
   }
@@ -78,8 +78,8 @@ class _CapturePhotoButtonState extends State<CapturePhotoButton> {
     return GestureDetector(
       onTap: onCapturePhoto,
       child: Container(
-        width: 224,
-        height: 126,
+        width: 224 * 1.2,
+        height: 126 * 1.2,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(30.0),

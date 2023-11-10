@@ -1,6 +1,7 @@
 import 'dart:convert'; // For decoding base64 image
 import 'package:flutter/material.dart';
 import 'package:toerst/models/fountain.dart';
+import 'package:toerst/screens/map/map_screen.dart';
 import 'package:toerst/widgets/standard_button.dart';
 import 'package:toerst/services/location_service.dart'; // Import LocationService class
 
@@ -19,7 +20,7 @@ const double imagePadding = 22.0;
 const double containerInnerPadding = 8.0;
 const double cardOuterPadding = 16.0;
 const double buttonBottomPadding = 40.0;
-const double containerBottomPadding = 0.0;
+const double containerBottomPadding = 40.0;
 
 // StatefulWidget to maintain mutable state
 class FormOverview extends StatefulWidget {
@@ -34,7 +35,7 @@ class FormOverview extends StatefulWidget {
 
 class _FormOverviewState extends State<FormOverview> {
   String? _address; // Local state variable for address
-  final secureStorage = new FlutterSecureStorage();
+  final secureStorage = const FlutterSecureStorage();
   final LocationService locationService = LocationService();
 
   // This function takes a base64 encoded string and converts it into an Image widget.
@@ -87,7 +88,7 @@ class _FormOverviewState extends State<FormOverview> {
 
 // TODO: Refactor this to network_services.dart
 // Asynchronous function to send a request to save fountain information to the backend.
-  Future<void> saveFountainRequest() async {
+  Future<bool> saveFountainRequest() async {
     // Retrieve API key and backend IP address from environment variables, or set to 'default' if not found.
     final apiKey = dotenv.env['API_KEY'] ?? 'default';
     final ip = dotenv.env['BACKEND_IP'] ?? 'default';
@@ -115,7 +116,7 @@ class _FormOverviewState extends State<FormOverview> {
 
     // Check if JWT token exists. If not, return early (presumably to go to login).
     if (jwt == null) {
-      return;
+      return false;
     }
 
     // Prepare the HTTP headers, including API key, content type, and authorization token.
@@ -125,21 +126,17 @@ class _FormOverviewState extends State<FormOverview> {
       'Authorization': jwt
     };
 
-    print(body);
-
     // Make the HTTP POST request to save the fountain information.
     final response =
         await http.post(Uri.parse(url), headers: headers, body: body);
 
-    // Print the HTTP status code for debugging purposes.
-    print("Result:");
-    print(response.statusCode);
-
     // Check the response status code to determine the outcome of the request.
     if (response.statusCode == 200) {
       // Fountain request was successfully sent.
+      return true;
     } else {
       // Something went wrong with sending the fountain request.
+      return false;
     }
   }
 
@@ -221,7 +218,23 @@ class _FormOverviewState extends State<FormOverview> {
             child: StandardButton(
               label: 'Submit',
               onPressed: () async {
-                saveFountainRequest();
+                // Connect here to Backend perhaps
+                if (await saveFountainRequest()) {
+                  if (mounted) {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MapScreen()),
+                        (route) => false);
+                  }
+                } else {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("Fountain request failed"),
+                      duration: Duration(milliseconds: 2500),
+                    ));
+                  }
+                }
               },
               backgroundColor: Colors.blue,
               textColor: Colors.white,
