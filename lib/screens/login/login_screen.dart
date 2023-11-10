@@ -57,6 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(_loginFailed);
+
     return Scaffold(
       appBar: AppBar(
         //Contains the build in back button
@@ -112,17 +114,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   });
                 }
               },
-              label:'Login',
+              label: 'Login',
               textColor: Colors.white,
               backgroundColor: Colors.black,
               width: 120,
             ),
             // Conditional widget to show "Login Failed" message
             if (_loginFailed)
-              const SizedBox(height: 20,),
-              const Center(
-                child: Text('Login Failed'),
-              ),
+              const Column(
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Center(
+                    child: Text('Login Failed'),
+                  ),
+                ],
+              )
           ],
         ),
       ),
