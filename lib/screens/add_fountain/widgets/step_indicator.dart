@@ -4,7 +4,7 @@ class StepIndicator extends StatelessWidget {
   final int totalSteps;
   final int currentStep;
 
-  StepIndicator({
+  const StepIndicator({super.key, 
     required this.totalSteps,
     required this.currentStep,
   });
@@ -18,7 +18,7 @@ class StepIndicator extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(totalSteps, (index) {
-            return Container(
+            return SizedBox(
               width: 22.0, // Set to the width of the largest dot
               height: 22.0, // Set to the height of the largest dot
               child: Center(

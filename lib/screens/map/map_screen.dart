@@ -1,13 +1,8 @@
 // PATH: lib/screens/map/map_screen.dart
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart' as device_Location;
-import 'package:toerst/models/fountain_location.dart';
 import 'package:toerst/models/nearest_fountain.dart';
-import 'package:toerst/screens/view_fountain/view_fountain_screen.dart';
 import 'package:toerst/screens/map/widgets/add_fountain_button.dart';
 import 'package:toerst/screens/map/widgets/bottom_app_bar.dart';
 import 'package:toerst/services/location_service.dart';
@@ -18,7 +13,6 @@ import 'package:toerst/screens/map/widgets/draggable_fountain_list.dart';
 // import 'screens/map/widgets/user_location_button.dart';
 
 // env file
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // Import constants
 import 'package:toerst/config/draggable_sheet_constants.dart';
@@ -43,9 +37,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   LatLng? _initialCameraPosition;
-  final Set<Marker> _markers = Set<Marker>();
+  final Set<Marker> _markers = <Marker>{};
   final List<NearestFountain> _nearestFountains = [];
-  final secureStorage = new FlutterSecureStorage();
+  final secureStorage = const FlutterSecureStorage();
 
   Map<SheetPositionState, SheetProperties> _sheetPropertiesMap = {};
 

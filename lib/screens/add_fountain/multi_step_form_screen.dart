@@ -155,11 +155,11 @@ class _MultiStepFormState extends State<MultiStepForm> {
               } else {
                 Fountain fountainData = Fountain(
                   imageBase64Format: imageBase64Format ?? "Unknown",
-                  type: type ?? "Unknown",
+                  type: type ?? "DRINKING",
                   rating: rating ?? 0.0,
                   latitude: latitude ?? 0.0,
                   longitude: longitude ?? 0.0,
-                  review: review ?? "Unknown",
+                  review: review ?? "",
                 );
                 Navigator.of(context).push(
                   MaterialPageRoute(

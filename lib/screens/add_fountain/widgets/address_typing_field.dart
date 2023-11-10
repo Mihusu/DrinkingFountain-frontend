@@ -12,7 +12,7 @@ class AddressSearchWidget extends StatelessWidget {
     if (apiKey == null) {
       throw Exception('Google Maps API key not found');
     }
-    _places = GoogleMapsPlaces(apiKey: apiKey!);
+    _places = GoogleMapsPlaces(apiKey: apiKey);
   }
 
   Future<void> _handlePress(BuildContext context) async {
@@ -22,7 +22,7 @@ class AddressSearchWidget extends StatelessWidget {
     }
     Prediction? prediction = await PlacesAutocomplete.show(
       context: context,
-      apiKey: apiKey!,
+      apiKey: apiKey,
       mode: Mode.overlay,
       language: "da",
       components: [Component(Component.country, "dk")],
@@ -45,7 +45,7 @@ class AddressSearchWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () => _handlePress(context),
-      child: Text("Search Address"),
+      child: const Text("Search Address"),
     );
   }
 }
