@@ -16,7 +16,7 @@ const double containerBottomPadding = 125.0;
 class ApproveScreen extends StatefulWidget {
   ApproveScreen({Key? key}) : super(key: key);
 
-  @override 
+  @override
   _ApproveScreen createState() => _ApproveScreen();
 }
 
@@ -33,15 +33,18 @@ class _ApproveScreen extends State<ApproveScreen> {
 
     List<SwipeItem> swipeItems = [];
 
-    if(fountainData.isNotEmpty) {
+    if (fountainData.isNotEmpty) {
       _emptyList = false;
     }
     for (int i = 0; i < fountainData.length; i++) {
       for (int j = 0; j < fountainData[i].reviews.length; j++) {
         String username = fountainData[i].reviews[j].username;
         String review = fountainData[i].reviews[j].text;
-        Image? base64Image = _decodeImage(fountainData[i].fountainImages[j].base64);
-        String address = await locationService.fetchAddress(fountainData[i].latitude, fountainData[i].longitude) ?? "No Address Found";
+        Image? base64Image =
+            _decodeImage(fountainData[i].fountainImages[j].base64);
+        String address = await locationService.fetchAddressFromCoordinates(
+                fountainData[i].latitude, fountainData[i].longitude) ??
+            "No Address Found";
 
         swipeItems.add(SwipeItem(
           content: Content(
@@ -110,140 +113,163 @@ class _ApproveScreen extends State<ApproveScreen> {
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: _matchEngine == null 
-        ? <Widget>[ const Center(child: CircularProgressIndicator())]
-        : <Widget>[
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                elevation: 5,
-                child: Padding(
-                  padding: const EdgeInsets.all(cardOuterPadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Display the image at the top
-                      SizedBox(
-                        height: 500, // Set a fixed height for SwipeCards
-                        child: _emptyList
-                        ? const Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "No more drinking fountains to be approved.",
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        : SwipeCards(
-                          matchEngine: _matchEngine!, 
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              color: Colors.white,
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(imagePadding),
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Transform.scale(
-                                        scale: imageScaleFactor,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                          child: _swipeItems[index]
-                                                  .content
-                                                  .imageBase64Format ??
-                                              Container(),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Text("By: ${_swipeItems[index].content.username}"),
-                                  const SizedBox(height: 20),
-                                  Text("${_swipeItems[index].content.type}"),
-                                  const SizedBox(height: 20),
-                                  _buildStarRating((_swipeItems[index].content.rating).toInt()),
-                                  Padding(
-                                    padding: const EdgeInsets.all(addressPadding),
-                                    child: Align(
+        children: _matchEngine == null
+            ? <Widget>[const Center(child: CircularProgressIndicator())]
+            : <Widget>[
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      elevation: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.all(cardOuterPadding),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Display the image at the top
+                            SizedBox(
+                              height: 500, // Set a fixed height for SwipeCards
+                              child: _emptyList
+                                  ? const Align(
                                       alignment: Alignment.center,
                                       child: Text(
-                                        _swipeItems[index].content.address ?? 'No fountain found',
-                                        textAlign: TextAlign.center, // Align the text center within the Text widget
+                                        "No more drinking fountains to be approved.",
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center,
                                       ),
+                                    )
+                                  : SwipeCards(
+                                      matchEngine: _matchEngine!,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Container(
+                                          color: Colors.white,
+                                          alignment: Alignment.center,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.all(
+                                                    imagePadding),
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child: Transform.scale(
+                                                    scale: imageScaleFactor,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.0),
+                                                      child: _swipeItems[index]
+                                                              .content
+                                                              .imageBase64Format ??
+                                                          Container(),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 20),
+                                              Text(
+                                                  "By: ${_swipeItems[index].content.username}"),
+                                              const SizedBox(height: 20),
+                                              Text(
+                                                  "${_swipeItems[index].content.type}"),
+                                              const SizedBox(height: 20),
+                                              _buildStarRating(
+                                                  (_swipeItems[index]
+                                                          .content
+                                                          .rating)
+                                                      .toInt()),
+                                              Padding(
+                                                padding: const EdgeInsets.all(
+                                                    addressPadding),
+                                                child: Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    _swipeItems[index]
+                                                            .content
+                                                            .address ??
+                                                        'No fountain found',
+                                                    textAlign: TextAlign
+                                                        .center, // Align the text center within the Text widget
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Text(
+                                                  "${_swipeItems[index].content.review ?? 'No review provided.'}"),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      onStackFinished: () {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                          content: Text(
+                                              "No more drinking or filling fountains"),
+                                          duration: Duration(milliseconds: 500),
+                                        ));
+                                        setState(() {
+                                          _emptyList = true;
+                                        });
+                                      },
+                                      //itemChanged: (SwipeItem item, int index) {
+                                      //print("Fountain request from: ${item.content.username}");
+                                      //},
+                                      leftSwipeAllowed: true,
+                                      rightSwipeAllowed: true,
+                                      fillSpace: true,
                                     ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text("${_swipeItems[index].content.review ?? 'No review provided.'}"),
-                                ],
-                              ),
-                            );
-                          },
-                          onStackFinished: () {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content:
-                                  Text("No more drinking or filling fountains"),
-                              duration: Duration(milliseconds: 500),
-                            ));
-                            setState(() {
-                              _emptyList = true;
-                            });
-                          },
-                          //itemChanged: (SwipeItem item, int index) {
-                            //print("Fountain request from: ${item.content.username}");
-                          //},
-                          leftSwipeAllowed: true,
-                          rightSwipeAllowed: true,
-                          fillSpace: true,
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
-          _emptyList 
-          ? Container() // Empty container when _swipeItems is empty
-          : Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              StandardButton(
-                onPressed: () async {
-                  // Calls unApproveFountain function here
-                  await networkService.unApproveFountain(_matchEngine!.currentItem!.content.id);
+                _emptyList
+                    ? Container() // Empty container when _swipeItems is empty
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          StandardButton(
+                            onPressed: () async {
+                              // Calls unApproveFountain function here
+                              await networkService.unApproveFountain(
+                                  _matchEngine!.currentItem!.content.id);
 
-                  // Perform the nope action
-                  _matchEngine!.currentItem!.nope();
-                },
-                label: "Nope",
-                borderColor: Colors.black,
-                textColor: Colors.black,
-              ),
-              StandardButton(
-                onPressed: () async {
-                  // Calls approveFountain function here
-                  await networkService.approveFountain(_matchEngine!.currentItem!.content.id);
+                              // Perform the nope action
+                              _matchEngine!.currentItem!.nope();
+                            },
+                            label: "Nope",
+                            borderColor: Colors.black,
+                            textColor: Colors.black,
+                          ),
+                          StandardButton(
+                            onPressed: () async {
+                              // Calls approveFountain function here
+                              await networkService.approveFountain(
+                                  _matchEngine!.currentItem!.content.id);
 
-                  // Perform the like action
-                  _matchEngine!.currentItem!.like();
-                },
-                label: "Like",
-                backgroundColor: Colors.black,
-                textColor: Colors.white,
-              ),
-            ],
-          ),
-          const SizedBox(height: containerBottomPadding), // Add some space at the bottom
-        ],
+                              // Perform the like action
+                              _matchEngine!.currentItem!.like();
+                            },
+                            label: "Like",
+                            backgroundColor: Colors.black,
+                            textColor: Colors.white,
+                          ),
+                        ],
+                      ),
+                const SizedBox(
+                    height:
+                        containerBottomPadding), // Add some space at the bottom
+              ],
       ),
     );
   }
@@ -268,7 +294,7 @@ class Content {
       this.latitude,
       this.longitude,
       this.review,
-      this.address, 
+      this.address,
       this.id});
 }
 
@@ -276,7 +302,8 @@ Widget _buildStarRating(int rating) {
   return Align(
     alignment: Alignment.center,
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.center, // Center the Row horizontally
+      mainAxisAlignment:
+          MainAxisAlignment.center, // Center the Row horizontally
       children: List.generate(
         rating,
         (index) => const Icon(
