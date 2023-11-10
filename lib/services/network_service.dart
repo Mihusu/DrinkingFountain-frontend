@@ -1,5 +1,6 @@
 // PATH: lib/services/network_service.dart
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,8 @@ class NetworkService {
   final String apiKey = dotenv.env['API_KEY'] ?? 'default';
   final String ip = dotenv.env['BACKEND_IP'] ?? 'default';
 
-  Future<Set<Marker>> createMarkers(BuildContext context, LatLng position) async {
+  Future<Set<Marker>> createMarkers(
+      BuildContext context, LatLng position) async {
     final locationService = LocationService();
     final headers = <String, String>{'Api-Key': apiKey};
     final double latitude = position.latitude;
@@ -104,13 +106,25 @@ class NetworkService {
     throw Exception("Failed to retrieve data from the API");
   }
 
+  Future<int> createNewReview(jwt, body) async {
+    final headers = <String, String>{
+      'Api-Key': apiKey,
+      'Authorization': jwt,
+      'Content-Type': 'application/json',
+    };
+
+    final url = 'http://$ip/review/create';
+
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
+    return response.statusCode;
+  }
+
   Future<List<CurrentFountain>> getUnapproveFountains() async {
     final FlutterSecureStorage secureStorage = FlutterSecureStorage();
     String? jwt = await secureStorage.read(key: 'JWT') ?? 'Default';
     final headers = <String, String>{'Api-Key': apiKey, 'Authorization': jwt};
-    final url =
-        'http://$ip/fountain/unapproved';
-        
+    final url = 'http://$ip/fountain/unapproved';
 
     final response = await http.get(Uri.parse(url), headers: headers);
     final List<CurrentFountain> fountains = [];
@@ -129,13 +143,11 @@ class NetworkService {
     final headers = <String, String>{'Api-Key': apiKey, 'Authorization': jwt};
     final url = 'http://$ip/fountain/approve/$id';
     try {
-      final response = await http.post(
-        Uri.parse(url),
-        body: json.encode({
-          'id': id, // Send the entity ID to be deleted
-        }),
-        headers: headers
-      );
+      final response = await http.post(Uri.parse(url),
+          body: json.encode({
+            'id': id, // Send the entity ID to be deleted
+          }),
+          headers: headers);
       print(id);
       if (response.statusCode == 200) {
         print('Successfully approved entity');
@@ -143,24 +155,22 @@ class NetworkService {
         print('Failed to approve entity. Status code: ${response.statusCode}');
       }
     } catch (error) {
-        print('Error approving entity: $error');
+      print('Error approving entity: $error');
     }
   }
-  
+
   Future<void> unApproveFountain(int id) async {
     const FlutterSecureStorage secureStorage = FlutterSecureStorage();
     String? jwt = await secureStorage.read(key: 'JWT') ?? 'Default';
     final headers = <String, String>{'Api-Key': apiKey, 'Authorization': jwt};
     final url = 'http://$ip/fountain/unapprove/$id';
     try {
-      final response = await http.post(
-        Uri.parse(url),
-        body: json.encode({
-          'id': id, // Send the entity ID to be deleted
-        }),
-        headers: headers
-      );
-      
+      final response = await http.post(Uri.parse(url),
+          body: json.encode({
+            'id': id, // Send the entity ID to be deleted
+          }),
+          headers: headers);
+
       if (response.statusCode == 200) {
         print('Entity deleted successfully');
         // Handle success, e.g., show a success message to the user
