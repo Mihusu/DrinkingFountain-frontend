@@ -31,8 +31,8 @@ class _FountainRatingBar extends State<FountainRatingBar> {
   @override
   void initState() {
     super.initState();
-    // Set _rating to the initialRating if provided, otherwise default to 3.0
-    _rating = widget.initialRating ?? 3.0;
+    // Set _rating to the initialRating if provided, otherwise default to 0.0
+    _rating = widget.initialRating ?? 0.0;
   }
 
   // Build the UI

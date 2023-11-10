@@ -78,8 +78,8 @@ class _CapturePhotoButtonState extends State<CapturePhotoButton> {
     return GestureDetector(
       onTap: onCapturePhoto,
       child: Container(
-        width: 224,
-        height: 126,
+        width: 224 * 1.2,
+        height: 126 * 1.2,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(30.0),
