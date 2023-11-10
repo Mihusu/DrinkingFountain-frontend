@@ -32,9 +32,6 @@ class NextButton extends StatelessWidget {
   }
 }
 
-// Spacer for readability
-// Next, the PreviousButton
-
 /// A button that indicates regression to the previous step in a form or process.
 class PreviousButton extends StatelessWidget {
   final VoidCallback onPressed;

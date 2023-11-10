@@ -1,4 +1,4 @@
-// lib/config/draggable_sheet_constants.dart
+// PATH: lib/config/draggable_sheet_config/draggable_sheet_constants.dart
 
 const double topPosition = 0.1;
 const double middlePosition = 0.55;

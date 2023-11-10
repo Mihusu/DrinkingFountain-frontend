@@ -1,8 +1,8 @@
 import 'dart:convert'; // For decoding base64 image
 import 'package:flutter/material.dart';
 import 'package:toerst/models/fountain.dart';
-import 'package:toerst/services/fetch_address_from_coordinates.dart'; // Utility to fetch address
 import 'package:toerst/widgets/standard_button.dart';
+import 'package:toerst/services/location_service.dart'; // Import LocationService class
 
 // Http
 import 'package:http/http.dart' as http;
@@ -35,6 +35,7 @@ class FormOverview extends StatefulWidget {
 class _FormOverviewState extends State<FormOverview> {
   String? _address; // Local state variable for address
   final secureStorage = new FlutterSecureStorage();
+  final LocationService locationService = LocationService();
 
   // This function takes a base64 encoded string and converts it into an Image widget.
   // If the string is null or decoding fails, it returns null.
@@ -61,11 +62,8 @@ class _FormOverviewState extends State<FormOverview> {
 
   // Fetch the address based on the latitude and longitude
   Future<void> _updateAddress() async {
-    String? address = await fetchAddressFromCoordinates(
+    String? address = await locationService.fetchAddressFromCoordinates(
         widget.fountainData.latitude, widget.fountainData.longitude);
-//    print('\n\n');
-//    print(address);
-//    print('\n\n');
     if (address != null) {
       setState(() {
         _address = address; // Update the state variable if address is fetched
@@ -73,7 +71,8 @@ class _FormOverviewState extends State<FormOverview> {
     }
   }
 
-  // Utility widget to build star rating based on the rating value
+  // TODO: Modify this widget to take a max rating too.
+  // This widget is needed multiple times throughout the project. Where should it go?
   Widget _buildStarRating(int rating) {
     return Row(
       children: List.generate(
@@ -100,7 +99,8 @@ class _FormOverviewState extends State<FormOverview> {
     Map data = {
       'longitude': widget.fountainData.longitude, // Longitude of the fountain
       'latitude': widget.fountainData.latitude, // Latitude of the fountain
-      'type': widget.fountainData.type, // Type of the fountain (e.g., 'FILLING' or 'DRINKING')
+      'type': widget.fountainData
+          .type, // Type of the fountain (e.g., 'FILLING' or 'DRINKING')
       'review': widget.fountainData.review,
       'score': widget.fountainData.rating, // User rating for the fountain
       'base64Images': widget.fountainData
@@ -152,7 +152,8 @@ class _FormOverviewState extends State<FormOverview> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon:
+              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
           onPressed: () {
             Navigator.pop(context); // Navigate back
           },

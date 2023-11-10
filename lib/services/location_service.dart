@@ -39,7 +39,8 @@ class LocationService {
   /// and constructs a formatted address string from its properties.
   /// If the address is successfully retrieved, it returns the address string,
   /// otherwise, it returns null.
-  Future<String?> fetchAddress(double latitude, double longitude) async {
+  Future<String?> fetchAddressFromCoordinates(
+      double latitude, double longitude) async {
     try {
       // Fetch placemarks (locations) based on latitude and longitude
       List<Placemark> placemarks =
@@ -70,23 +71,6 @@ class LocationService {
       if (kDebugMode) {
         print('Error occurred: $e');
       }
-      return null;
-    }
-  }
-
-  Future<LatLng?> getCurrentLocation() async {
-    final location = loc.Location(); // Use the 'loc' alias here
-    final hasPermission = await location.hasPermission();
-
-    if (hasPermission == PermissionStatus.denied) {
-      await location.requestPermission();
-    }
-
-    final currentLocation = await location.getLocation();
-
-    if (currentLocation.latitude != null && currentLocation.longitude != null) {
-      return LatLng(currentLocation.latitude!, currentLocation.longitude!);
-    } else {
       return null;
     }
   }
