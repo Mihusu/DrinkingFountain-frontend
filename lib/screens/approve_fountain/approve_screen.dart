@@ -38,43 +38,45 @@ class _ApproveScreen extends State<ApproveScreen> {
     }
     for (int i = 0; i < fountainData.length; i++) {
       for (int j = 0; j < fountainData[i].reviews.length; j++) {
-        String username = fountainData[i].reviews[j].username;
-        String review = fountainData[i].reviews[j].text;
-        Image? base64Image = _decodeImage(fountainData[i].fountainImages[j].base64);
-        String address = await locationService.fetchAddress(fountainData[i].latitude, fountainData[i].longitude) ?? "No Address Found";
+        for (int k = 0; k < fountainData[i].fountainImages.length; k++) {
+          String username = fountainData[i].reviews[j].username;
+          String review = fountainData[i].reviews[j].text;
+          Image? base64Image = _decodeImage(fountainData[i].fountainImages[k].base64);
+          String address = await locationService.fetchAddress(fountainData[i].latitude, fountainData[i].longitude) ?? "No Address Found";
 
-        swipeItems.add(SwipeItem(
-          content: Content(
-            id: fountainData[i].id,
-            username: username,
-            imageBase64Format: base64Image,
-            type: fountainData[i].type,
-            rating: fountainData[i].score,
-            address: address,
-            review: review,
-          ),
-          likeAction: () async {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-                  "Liked ${fountainData[i].reviews[j].username}'s fountain request"),
-              duration: const Duration(milliseconds: 500),
-            ));
+          swipeItems.add(SwipeItem(
+            content: Content(
+              id: fountainData[i].id,
+              username: username,
+              imageBase64Format: base64Image,
+              type: fountainData[i].type,
+              rating: fountainData[i].score,
+              address: address,
+              review: review,
+            ),
+            likeAction: () async {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                    "Liked ${fountainData[i].reviews[j].username}'s fountain request"),
+                duration: const Duration(milliseconds: 500),
+              ));
 
-            await networkService.approveFountain(fountainData[i].id);
-            i--;
-            j--;
-          },
-          nopeAction: () async {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-                  "Nope ${fountainData[i].reviews[j].username}'s fountain request"),
-              duration: const Duration(milliseconds: 500),
-            ));
-            await networkService.unApproveFountain(fountainData[i].id);
-            i--;
-            j--;
-          },
-        ));
+              await networkService.approveFountain(fountainData[i].id);
+              i--;
+              j--;
+            },
+            nopeAction: () async {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                    "Nope ${fountainData[i].reviews[j].username}'s fountain request"),
+                duration: const Duration(milliseconds: 500),
+              ));
+              await networkService.unApproveFountain(fountainData[i].id);
+              i--;
+              j--;
+            },
+          ));
+        }
       }
     }
 
@@ -128,7 +130,7 @@ class _ApproveScreen extends State<ApproveScreen> {
                     children: [
                       // Display the image at the top
                       SizedBox(
-                        height: 500, // Set a fixed height for SwipeCards
+                        height: 475, // Set a fixed height for SwipeCards
                         child: _emptyList
                         ? const Align(
                             alignment: Alignment.center,

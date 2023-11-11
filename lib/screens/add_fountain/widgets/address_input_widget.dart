@@ -90,9 +90,9 @@ class _AddressInputWidget extends State<AddressInputWidget> {
               },
             )
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 15),
           Text(_currentAddress),
-          const SizedBox(height: 40.0), // Spacer for better UI
+          const SizedBox(height: 30.0), // Spacer for better UI
           SubmitAddressButton(
             onPressed: () async {
               await _getCoordinatesFromAddress(
