@@ -34,14 +34,19 @@ class CustomBottomAppBar extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  icon: Icon(icon, color: bottomAppBarIconColor),
+                TextButton(
                   onPressed: action,
+                  child: Column(
+                    children: [
+                      Icon(icon, color: bottomAppBarIconColor),
+                      const SizedBox(height: 8),
+                      Text(text, 
+                        style: const TextStyle(color: bottomAppBarTextColor, 
+                        fontWeight: FontWeight.w600)
+                      ),
+                    ],
+                  ),
                 ),
-                Text(text,
-                    style: const TextStyle(
-                        color: bottomAppBarTextColor,
-                        fontWeight: FontWeight.w600)),
               ],
             ),
           ),
@@ -50,7 +55,7 @@ class CustomBottomAppBar extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 48.0), // Placeholder for the button
+                SizedBox(height: 36.0), // Placeholder for the button
                 Text("Add Fountain",
                     style: TextStyle(
                         color: bottomAppBarTextColor,
@@ -63,15 +68,13 @@ class CustomBottomAppBar extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.account_circle,
-                      color: bottomAppBarIconColor),
+                TextButton(
                   onPressed: () async {
                     final authToken = await secureStorage.read(key: 'JWT');
 
                     if (authToken != null) {
                       if (context.mounted) {
-                        //Check if context is still available
+                        // Check if context is still available
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -83,7 +86,7 @@ class CustomBottomAppBar extends StatelessWidget {
                       }
                     } else {
                       if (!context.mounted) {
-                        return; //Check if context is still available
+                        return; // Check if context is still available
                       }
                       Navigator.push(
                         context,
@@ -93,11 +96,17 @@ class CustomBottomAppBar extends StatelessWidget {
                       );
                     }
                   },
+                  child: const Column(
+                    children: [
+                      Icon(Icons.account_circle, color: bottomAppBarIconColor),
+                      SizedBox(height: 8),
+                      Text("Profile", 
+                        style: TextStyle(color: Colors.black, 
+                        fontWeight: FontWeight.w600),
+                      )
+                    ],
+                  ),
                 ),
-                const Text("Profile",
-                    style: TextStyle(
-                        color: bottomAppBarTextColor,
-                        fontWeight: FontWeight.w600)),
               ],
             ),
           ),
