@@ -18,6 +18,6 @@ class FountainTypes {
             'Select this for stations to fill up your bottle or container.',
         title: 'Filling Station'),
 
-    // Add more fountain types as needed
+    // Add more fountain types here
   ];
 }

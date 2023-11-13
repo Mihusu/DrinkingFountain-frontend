@@ -2,16 +2,16 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:toerst/screens/add_fountain/widgets/submit_address_button.dart';
-import 'package:toerst/services/fetch_address_from_coordinates.dart';
 import 'package:toerst/services/location_service.dart';
 
 const double locationPadding = 16.0;
 
 class AddressInputWidget extends StatefulWidget {
-  AddressInputWidget({Key? key, required this.onAddressSelected}) : super(key: key);
+  AddressInputWidget({Key? key, required this.onAddressSelected})
+      : super(key: key);
 
   final Function(String, double, double) onAddressSelected;
-  
+
   @override
   _AddressInputWidget createState() => _AddressInputWidget();
 }
@@ -24,23 +24,26 @@ class _AddressInputWidget extends State<AddressInputWidget> {
       List<Location> locations = await locationFromAddress(address);
       if (locations.isNotEmpty) {
         final location = locations.first;
-        widget.onAddressSelected(address, location.latitude, location.longitude);
-        final foundAddress = await _findAddress(location.latitude, location.longitude);
+        widget.onAddressSelected(
+            address, location.latitude, location.longitude);
+        final foundAddress =
+            await _findAddress(location.latitude, location.longitude);
         setState(() {
-          _currentAddress = foundAddress; 
+          _currentAddress = foundAddress;
         });
       }
     } catch (e) {
       setState(() {
-         _currentAddress = "Not Found"; 
+        _currentAddress = "Not Found";
       });
       print('Error occurred: $e');
     }
   }
 
-   // Fetch the address based on the latitude and longitude
+  // Fetch the address based on the latitude and longitude
   Future<String> _findAddress(latitude, longitude) async {
-    String? address = await fetchAddressFromCoordinates(latitude, longitude);
+    String? address = await LocationService()
+        .fetchAddressFromCoordinates(latitude, longitude);
     if (address != null) {
       return address;
     }
@@ -57,39 +60,45 @@ class _AddressInputWidget extends State<AddressInputWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            width:
-                MediaQuery.of(context).size.width * 0.7, // 70% of screen width
-            child: TextField(
-              controller: addressController,
-              decoration: InputDecoration(
-                labelText: 'Enter Address',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                suffixIcon: 
-                Padding(
-                  padding: EdgeInsets.only(right: 8.0), // Adjust the padding value as needed
-                  child: IconButton(
-                    color: Colors.black,
-                    icon: Icon(Icons.my_location), // You can change this to your desired icon
-                    onPressed: () async {
-                      final locationService = LocationService();
-                      final initialLocation = await locationService.fetchInitialLocation();
+              width: MediaQuery.of(context).size.width *
+                  0.7, // 70% of screen width
+              child: TextField(
+                controller: addressController,
+                decoration: InputDecoration(
+                  labelText: 'Enter Address',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  suffixIcon: Padding(
+                    padding: EdgeInsets.only(
+                        right: 8.0), // Adjust the padding value as needed
+                    child: IconButton(
+                      color: Colors.black,
+                      icon: Icon(Icons
+                          .my_location), // You can change this to your desired icon
+                      onPressed: () async {
+                        final locationService = LocationService();
+                        final initialLocation =
+                            await locationService.fetchInitialLocation();
 
-                      final address = await _findAddress(initialLocation!.latitude, initialLocation.longitude);
-                      setState(() {
-                        _currentAddress = address;
-                        widget.onAddressSelected(address, initialLocation.latitude, initialLocation.longitude);
-                      });
-                    },
+                        final address = await _findAddress(
+                            initialLocation!.latitude,
+                            initialLocation.longitude);
+                        setState(() {
+                          _currentAddress = address;
+                          widget.onAddressSelected(
+                              address,
+                              initialLocation.latitude,
+                              initialLocation.longitude);
+                        });
+                      },
+                    ),
                   ),
                 ),
-              ),
-              onSubmitted: (address) async {
-                await _getCoordinatesFromAddress(address);
-              },
-            )
-          ),
+                onSubmitted: (address) async {
+                  await _getCoordinatesFromAddress(address);
+                },
+              )),
           const SizedBox(height: 15),
           Text(_currentAddress),
           const SizedBox(height: 30.0), // Spacer for better UI

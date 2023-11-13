@@ -1,6 +1,8 @@
 // fountain_list.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:toerst/models/nearest_fountain.dart';
+import 'package:toerst/widgets/star_rating_builder.dart';
 
 class FountainList extends StatelessWidget {
   final Color listedItemColor;
@@ -8,12 +10,13 @@ class FountainList extends StatelessWidget {
   final Color listedItemTextColor;
   final List<NearestFountain> nearestFountains;
 
-  const FountainList(
-      {super.key,
-      required this.listedItemColor,
-      required this.listedItemBorderColor,
-      required this.listedItemTextColor,
-      required this.nearestFountains});
+  const FountainList({
+    super.key,
+    required this.listedItemColor,
+    required this.listedItemBorderColor,
+    required this.listedItemTextColor,
+    required this.nearestFountains,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +50,20 @@ class FountainList extends StatelessWidget {
   Row _buildListItemRow(fountainData) {
     return Row(
       children: <Widget>[
-        const Icon(Icons.question_mark_outlined, //TODO add photo for type
-            size: 50.0,
-            color: Colors.black),
-        const SizedBox(width: 10.0),
+        CircleAvatar(
+          backgroundColor: Colors.white,
+          radius: 25.0,
+          child: Padding(
+            padding:
+                const EdgeInsets.only(right: 4.0), // Adjust the value as needed
+            child: SvgPicture.asset(
+              "assets/Icons/Regular_Drinking_Fountain_Icon.svg",
+              colorFilter:
+                  const ColorFilter.mode(Colors.black, BlendMode.srcIn),
+              semanticsLabel: 'Regular Drinking Fountain',
+            ),
+          ),
+        ),
         Expanded(child: _buildListItemTextColumn(fountainData)),
         _buildDirectionsButton(),
       ],
@@ -58,7 +71,7 @@ class FountainList extends StatelessWidget {
   }
 
   Column _buildListItemTextColumn(NearestFountain fountainData) {
-    final String distance = fountainData.distance.toStringAsFixed(2);
+    final String distance = fountainData.distance.toStringAsFixed(1);
     final String distanceText = "$distance km";
     final String address = fountainData.address ?? "Address not Found";
     final int starRating = fountainData.score.toInt();
@@ -67,11 +80,9 @@ class FountainList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(distanceText),
-        Row(
-          children: List.generate(
-            starRating,
-            (index) => Icon(Icons.star, size: 15.0, color: listedItemTextColor),
-          ),
+        StarRatingBuilder(
+          ratingAsInt: starRating,
+          showRatingAsDouble: false,
         ),
         SizedBox(
           width: double.infinity, // or a specific width
