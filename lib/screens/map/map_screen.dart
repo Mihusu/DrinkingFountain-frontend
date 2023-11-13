@@ -6,6 +6,7 @@ import 'package:toerst/models/nearest_fountain.dart';
 import 'package:toerst/screens/map/widgets/add_fountain_button.dart';
 import 'package:toerst/screens/map/widgets/bottom_app_bar.dart';
 import 'package:toerst/services/location_service.dart';
+import 'package:toerst/services/map_style_service.dart';
 import 'package:toerst/widgets/google_map.dart';
 import 'package:toerst/services/network_service.dart';
 // Import widgets
@@ -15,9 +16,9 @@ import 'package:toerst/screens/map/widgets/draggable_fountain_list.dart';
 // env file
 
 // Import constants
-import 'package:toerst/config/draggable_sheet_constants.dart';
+import 'package:toerst/config/draggable_sheet_config/draggable_sheet_constants.dart';
 
-import 'package:toerst/config/sheet_properties.dart';
+import 'package:toerst/config/draggable_sheet_config/sheet_properties.dart';
 import 'package:toerst/themes/app_colors.dart';
 
 // Secure storage
@@ -40,6 +41,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   final Set<Marker> _markers = <Marker>{};
   final List<NearestFountain> _nearestFountains = [];
   final secureStorage = const FlutterSecureStorage();
+  final MapStyleService _mapStyleService =
+      MapStyleService(); // Create an instance of MapStyleService
 
   Map<SheetPositionState, SheetProperties> _sheetPropertiesMap = {};
 
@@ -47,6 +50,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _initialize();
+
+    // Should be in be in config folder?
+//------------------------Should be moved---------------------------------//
     _sheetPropertiesMap = {
       SheetPositionState.top: SheetProperties(
         icon: Icons.arrow_downward,
@@ -64,7 +70,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
         action: () => snapSheet(middlePosition),
       ),
     };
-    _loadMapStyle();
+//------------------------Should be moved---------------------------------//
+
     _initializeAnimationController();
   }
 
@@ -73,11 +80,15 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   void _initialize() async {
     final locationService = LocationService();
     final networkService = NetworkService();
+    _mapStyle = await _mapStyleService
+        .loadMapStyle('assets/themes/silverMapTheme.json'); // Load map style
     final initialLocation = await locationService.fetchInitialLocation();
     if (initialLocation != null) {
       if (!context.mounted) return; //Cant load if build context is not mounted
-      final markers = await networkService.createMarkers(context, initialLocation);
-      final nearestFountains =await networkService.createNearestFountains(initialLocation);
+      final markers =
+          await networkService.createMarkers(context, initialLocation);
+      final nearestFountains =
+          await networkService.createNearestFountains(initialLocation);
       setState(() {
         _initialCameraPosition = initialLocation;
         _markers.addAll(markers);
@@ -91,6 +102,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     }
   }
 
+//------------------------Should be moved---------------------------------//
+  // Should be moved to a service too I think.
   SheetPositionState _getCurrentState() {
     if (_sheetPosition <= 0.1) {
       return SheetPositionState.top;
@@ -100,22 +113,10 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       return SheetPositionState.bottom;
     }
   }
+//------------------------Should be moved---------------------------------//
 
-  void _loadMapStyle() {
-    rootBundle.loadString('assets/themes/silverMapTheme.json').then((string) {
-      setState(() {
-        _mapStyle = string;
-      });
-    });
-  }
-
-  void _initializeAnimationController() {
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: animationDuration.toInt()),
-    );
-  }
-
+//------------------------Should be moved---------------------------------//
+  // Should be moved to a service too I think.
   void snapSheet(double targetPosition) {
     _animation = Tween<double>(begin: _sheetPosition, end: targetPosition)
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut))
@@ -128,7 +129,10 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     _controller.reset();
     _controller.forward();
   }
+//------------------------Should be moved---------------------------------//
 
+//------------------------Should be moved---------------------------------//
+  // Should be moved to a service I think..
   double getSnapPosition(double currentPosition) {
     double distTop = (currentPosition - topReference).abs();
     double distMiddle = (currentPosition - middleReference).abs();
@@ -142,10 +146,20 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       return bottomPosition;
     }
   }
+//------------------------Should be moved---------------------------------//
 
-  Future<void> _goToCurrentLocation() async {
+  void _initializeAnimationController() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: animationDuration.toInt()),
+    );
+  }
+
+//------------------------Should be moved---------------------------------//
+  // Should be moved to a service?
+  Future<void> _moveCameraToCurrentLocation() async {
     final locationService = LocationService();
-    final target = await locationService.getCurrentLocation();
+    final target = await locationService.fetchInitialLocation();
 
     if (target != null) {
       final cameraPosition = CameraPosition(
@@ -156,6 +170,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
           .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
     }
   }
+//------------------------Should be moved---------------------------------//
 
   @override
   void dispose() {
@@ -188,7 +203,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
             },
             markers: _markers,
           ),
-          _buildFloatingActionButton(screenHeight),
+          _buildMoveCameraToCurrentPositionFloatingActionButton(screenHeight),
           DraggableFountainList(
             sheetPosition: _sheetPosition,
             onVerticalDragUpdate: (delta) {
@@ -210,18 +225,22 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     );
   }
 
-  Positioned _buildFloatingActionButton(double screenHeight) {
+//------------------------Should be moved---------------------------------//
+  // Should be moved
+  Positioned _buildMoveCameraToCurrentPositionFloatingActionButton(
+      double screenHeight) {
     return Positioned(
       top: (_sheetPosition * screenHeight) - 70,
       right: 14,
       child: _sheetPosition != 0.1
           ? FloatingActionButton(
               heroTag: "newFountain",
-              onPressed: _goToCurrentLocation,
+              onPressed: _moveCameraToCurrentLocation,
               backgroundColor: Colors.black,
               child: const Icon(Icons.my_location),
             )
           : Container(),
     );
   }
+//------------------------Should be moved---------------------------------//
 }

@@ -34,7 +34,7 @@ class NetworkService {
       for (var json in jsonList) {
         final FountainLocation location = FountainLocation.fromJson(json);
 
-        String address = await locationService.fetchAddress(
+        String address = await locationService.fetchAddressFromCoordinates(
                 location.latitude, location.longitude) ??
             "No Address Found";
 
@@ -81,8 +81,9 @@ class NetworkService {
           jsonList.map((json) => NearestFountain.fromJson(json)).toList());
       await Future.forEach(nearestFountains,
           (NearestFountain fountainData) async {
-        fountainData.address = await locationService.fetchAddress(
-            fountainData.latitude, fountainData.longitude);
+        fountainData.address =
+            await locationService.fetchAddressFromCoordinates(
+                fountainData.latitude, fountainData.longitude);
       });
     } else if (kDebugMode) {
       print("Api failed");

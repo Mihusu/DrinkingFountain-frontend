@@ -41,7 +41,7 @@ class _FocusFountainScreenState extends State<FocusFountainScreen> {
     });
 
     if (_fountainData != null) {
-      _address = await _locationService.fetchAddress(
+      _address = await _locationService.fetchAddressFromCoordinates(
         _fountainData!.latitude,
         _fountainData!.longitude,
       );
