@@ -25,7 +25,7 @@ class FountainList extends StatelessWidget {
 
   ListView _buildListView() {
     return ListView.builder(
-      padding: const EdgeInsets.only(top: 13.0, bottom: 70.0),
+      padding: const EdgeInsets.only(bottom: 70.0),
       itemCount: nearestFountains.length,
       itemBuilder: (BuildContext context, int index) {
         final item = nearestFountains[index];
@@ -40,7 +40,7 @@ class FountainList extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         color: listedItemColor,
-        borderRadius: BorderRadius.circular(90.0),
+        borderRadius: BorderRadius.circular(5.0),
         border: Border.all(color: listedItemBorderColor, width: 1.0),
       ),
       child: _buildListItemRow(fountainData),
