@@ -42,7 +42,7 @@ class _ApproveScreen extends State<ApproveScreen> {
           String username = fountainData[i].reviews[j].username;
           String review = fountainData[i].reviews[j].text;
           Image? base64Image = _decodeImage(fountainData[i].fountainImages[k].base64);
-          String address = await locationService.fetchAddress(fountainData[i].latitude, fountainData[i].longitude) ?? "No Address Found";
+          String address = await locationService.fetchAddressFromCoordinates(fountainData[i].latitude, fountainData[i].longitude) ?? "No Address Found";
 
           swipeItems.add(SwipeItem(
             content: Content(
