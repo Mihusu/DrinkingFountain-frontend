@@ -134,7 +134,7 @@ List<Widget> _fountainView(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Transform.scale(
-          scale: 1.5, // Adjust the scale factor as needed
+          scale: 1.5, // Adjusts the size.
           child: StarRatingBuilder(
             ratingAsInt: _fountainData!.score.toInt(),
           ),
