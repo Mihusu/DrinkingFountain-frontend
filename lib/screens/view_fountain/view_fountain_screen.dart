@@ -9,6 +9,7 @@ import 'package:toerst/services/location_service.dart';
 import 'package:toerst/services/network_service.dart';
 import 'package:toerst/themes/app_colors.dart';
 import 'package:toerst/widgets/standard_button.dart';
+import 'package:toerst/widgets/star_rating_builder.dart';
 
 class FocusFountainScreen extends StatefulWidget {
   final int fountainId;
@@ -130,13 +131,15 @@ List<Widget> _fountainView(
     ),
     SizedBox(height: screenHeight * 0.025),
     Row(
-      mainAxisAlignment:
-          MainAxisAlignment.center, // Center the Row horizontally
-      children: List.generate(
-        _fountainData!.score.toInt(),
-        (index) =>
-            const Icon(Icons.star, size: 30.0, color: listedItemTextColor),
-      ),
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Transform.scale(
+          scale: 1.5, // Adjust the scale factor as needed
+          child: StarRatingBuilder(
+            ratingAsInt: _fountainData!.score.toInt(),
+          ),
+        ),
+      ],
     ),
     SizedBox(height: screenHeight * 0.025),
     StandardButton(
