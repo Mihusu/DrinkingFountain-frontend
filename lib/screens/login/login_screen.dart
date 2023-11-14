@@ -10,6 +10,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 //Secure storage
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:toerst/screens/profile/profile_screen.dart';
+import 'package:toerst/screens/register/register_screen.dart';
 import 'package:toerst/widgets/standard_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -57,29 +58,36 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(_loginFailed);
-
     return Scaffold(
       appBar: AppBar(
         //Contains the build in back button
-        title: const Text('Login Screen'),
+        title: const Text('Login'),
         backgroundColor: Colors.black,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // Conditional widget to show "Login Failed" message
+            if (_loginFailed)
+              const Column(
+                children: [
+                  SizedBox(height: 20),
+                  Center(
+                    child: Text('Login Failed. Please provide valid credentials',
+                    style: TextStyle(fontWeight: FontWeight.w600,
+                    color: Colors.red)),
+                  ),
+                ],
+              ),
             // Username Input Field
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TextFormField(
                 controller: usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Username',
-                ),
+                decoration: const InputDecoration(labelText: 'Username'),
               ),
             ),
-
             // Password Input Field
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -91,7 +99,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-
             // Login Button
             StandardButton(
               onPressed: () async {
@@ -117,20 +124,73 @@ class _LoginScreenState extends State<LoginScreen> {
               label: 'Login',
               textColor: Colors.white,
               backgroundColor: Colors.black,
-              width: 120,
+              width: 150,
             ),
-            // Conditional widget to show "Login Failed" message
-            if (_loginFailed)
-              const Column(
-                children: [
-                  SizedBox(
-                    height: 20,
+            const SizedBox(height: 25), // Add some space between the button and the text
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Don’t have an account? ',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
                   ),
-                  Center(
-                    child: Text('Login Failed'),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    // Navigate to the register screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RegisterScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Register here',
+                    style: TextStyle(
+                      color: Colors.blue, 
+                      fontSize: 16,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
-                ],
-              )
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Forgotten your password? ',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                GestureDetector(
+                  onTap: () {
+                    // Navigate to the register screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RegisterScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Reset here',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

@@ -147,7 +147,7 @@ class NetworkService {
             'id': id, // Send the entity ID to be deleted
           }),
           headers: headers);
-      print(id);
+
       if (response.statusCode == 200) {
         print('Successfully approved entity');
       } else {

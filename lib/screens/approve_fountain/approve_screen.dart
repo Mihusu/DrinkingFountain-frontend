@@ -199,9 +199,6 @@ class _ApproveScreen extends State<ApproveScreen> {
                               _emptyList = true;
                             });
                           },
-                          //itemChanged: (SwipeItem item, int index) {
-                            //print("Fountain request from: ${item.content.username}");
-                          //},
                           leftSwipeAllowed: true,
                           rightSwipeAllowed: true,
                           fillSpace: true,
