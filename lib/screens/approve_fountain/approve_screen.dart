@@ -198,7 +198,6 @@ class _ApproveScreen extends State<ApproveScreen> {
                                                   ),
                                                 ],
                                               ),
-
                                               Padding(
                                                 padding: const EdgeInsets.all(
                                                     addressPadding),
