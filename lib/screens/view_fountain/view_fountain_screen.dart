@@ -6,6 +6,7 @@ import 'package:toerst/models/viewed_fountain.dart';
 import 'package:toerst/screens/review/create_review_screen.dart';
 import 'package:toerst/screens/view_fountain/widgets/review_card.dart';
 import 'package:toerst/services/location_service.dart';
+import 'package:toerst/services/maps_launcher_service.dart';
 import 'package:toerst/services/network_service.dart';
 import 'package:toerst/themes/app_colors.dart';
 import 'package:toerst/widgets/standard_button.dart';
@@ -55,6 +56,10 @@ class _FocusFountainScreenState extends State<FocusFountainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // get latitude and loingitude
+    final latitude = _fountainData?.latitude;
+    final longitude = _fountainData?.longitude;
+
     // Get the screen dimensions
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -84,6 +89,19 @@ class _FocusFountainScreenState extends State<FocusFountainScreen> {
               : _fountainView(screenHeight, screenWidth, _fountainData,
                   _address, context, widget.fountainId),
         ),
+      ),
+      // getDirectionsButton
+      floatingActionButton: FloatingActionButton(
+        splashColor: Colors.black,
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.arrow_forward),
+        onPressed: () {
+          if (latitude != null && longitude != null) {
+            getDirectionsFromCoordinates(latitude, longitude);
+          } else {
+            print("laitude and/or longitude are null");
+          }
+        },
       ),
     );
   }
@@ -138,7 +156,9 @@ List<Widget> _fountainView(
             const Icon(Icons.star, size: 30.0, color: listedItemTextColor),
       ),
     ),
-    SizedBox(height: screenHeight * 0.025),
+    SizedBox(
+        height: screenHeight *
+            0.025), // space bewteen rating and "rate this fountain" button
     StandardButton(
       label: "Rate This Fountain",
       onPressed: () => {
@@ -153,13 +173,15 @@ List<Widget> _fountainView(
       borderColor: Colors.black,
     ),
     Expanded(
-        child: ListView.builder(
-      padding: const EdgeInsets.only(top: 13.0, bottom: 70.0),
-      itemCount: _fountainData!.reviews.length,
-      itemBuilder: (BuildContext context, int index) {
-        return ReviewCard(
-            review: _fountainData!.reviews[index], screenHeight: screenHeight);
-      },
-    )),
+      child: ListView.builder(
+        padding: const EdgeInsets.only(top: 13.0, bottom: 70.0),
+        itemCount: _fountainData!.reviews.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ReviewCard(
+              review: _fountainData!.reviews[index],
+              screenHeight: screenHeight);
+        },
+      ),
+    ),
   ];
 }

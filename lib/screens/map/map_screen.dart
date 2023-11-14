@@ -82,21 +82,21 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     _mapStyle = await _mapStyleService
         .loadMapStyle('assets/themes/silverMapTheme.json'); // Load map style
     final initialLocation = await locationService.fetchInitialLocation();
+
     if (initialLocation != null) {
+      setState(() {
+        _initialCameraPosition = initialLocation;
+        _loading = false;
+      });
+
       if (!context.mounted) return; //Cant load if build context is not mounted
       final markers =
           await networkService.createMarkers(context, initialLocation);
       final nearestFountains =
           await networkService.createNearestFountains(initialLocation);
       setState(() {
-        _initialCameraPosition = initialLocation;
         _markers.addAll(markers);
         _nearestFountains.addAll(nearestFountains);
-        _loading = false;
-      });
-    } else {
-      setState(() {
-        _loading = false;
       });
     }
   }

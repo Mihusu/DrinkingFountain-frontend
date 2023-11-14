@@ -29,12 +29,7 @@ class DraggableFountainList extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     if (loading) {
-      return Container(
-        child: const Text(
-          "Loading fountains",
-          textAlign: TextAlign.center,
-        ),
-      );
+      return Container();
     }
     return Positioned(
       top: sheetPosition * screenHeight,

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:toerst/models/nearest_fountain.dart';
+import 'package:toerst/services/maps_launcher_service.dart';
 import 'package:toerst/widgets/star_rating_builder.dart';
 
 class FountainList extends StatelessWidget {
@@ -48,6 +49,9 @@ class FountainList extends StatelessWidget {
   }
 
   Row _buildListItemRow(fountainData) {
+    final double latitude = fountainData.latitude;
+    final double longitude = fountainData.longitude;
+
     return Row(
       children: <Widget>[
         CircleAvatar(
@@ -65,7 +69,7 @@ class FountainList extends StatelessWidget {
           ),
         ),
         Expanded(child: _buildListItemTextColumn(fountainData)),
-        _buildDirectionsButton(),
+        _buildDirectionsButton(latitude, longitude),
       ],
     );
   }
@@ -96,13 +100,20 @@ class FountainList extends StatelessWidget {
     );
   }
 
-  // Should perhaps be a button that that launches google maps with
-  //the coordinates typed in.
-  CircleAvatar _buildDirectionsButton() {
-    return const CircleAvatar(
+  CircleAvatar _buildDirectionsButton(double latitude, double longitude) {
+    return CircleAvatar(
+      // DirectionsButton
       radius: 25.0,
       backgroundColor: Colors.green,
-      child: Icon(Icons.arrow_forward, color: Colors.white),
+      child: IconButton.filled(
+        onPressed: () {
+          getDirectionsFromCoordinates(latitude, longitude);
+        },
+        icon: const Icon(
+          Icons.arrow_forward,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }
