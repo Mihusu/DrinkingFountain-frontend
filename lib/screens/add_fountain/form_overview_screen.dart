@@ -73,20 +73,6 @@ class _FormOverviewState extends State<FormOverview> {
     }
   }
 
-  // TODO: Modify this widget to take a max rating too.
-  // This widget is needed multiple times throughout the project. Where should it go?
-  // Widget _buildStarRating(int rating) {
-  //   return Row(
-  //     children: List.generate(
-  //       rating,
-  //       (index) => const Icon(
-  //         Icons.star,
-  //         color: Colors.black,
-  //       ),
-  //     ),
-  //   );
-  // }
-
 // TODO: Refactor this to network_services.dart
 // Asynchronous function to send a request to save fountain information to the backend.
   Future<bool> saveFountainRequest() async {
