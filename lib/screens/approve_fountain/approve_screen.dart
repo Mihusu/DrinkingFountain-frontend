@@ -185,12 +185,20 @@ class _ApproveScreen extends State<ApproveScreen> {
                                                   "${_swipeItems[index].content.type}"),
                                               const SizedBox(height: 20),
                                               // Build row of stars, based on fountain rating.
-                                              StarRatingBuilder(
-                                                ratingAsInt: (_swipeItems[index]
-                                                        .content
-                                                        .rating)
-                                                    .toInt(),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  StarRatingBuilder(
+                                                    ratingAsInt:
+                                                        (_swipeItems[index]
+                                                                .content
+                                                                .rating)
+                                                            .toInt(),
+                                                  ),
+                                                ],
                                               ),
+
                                               Padding(
                                                 padding: const EdgeInsets.all(
                                                     addressPadding),
