@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:toerst/models/viewed_fountain.dart';
+import 'package:toerst/widgets/star_rating_builder.dart';
 
 class ReviewCard extends StatelessWidget {
   final ReviewDTO review;
@@ -35,11 +36,13 @@ class ReviewCard extends StatelessWidget {
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   Row(
-                    children: List.generate(
-                      review.stars,
-                      (index) => const Icon(Icons.star,
-                          size: 25.0, color: Colors.black),
-                    ),
+                    // NOTE: The desired size of the star icons before was set to 25.0.
+                    children: [
+                      StarRatingBuilder(
+                        ratingAsInt: review.stars,
+                        showRatingAsDouble: false,
+                      ),
+                    ],
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   Text(

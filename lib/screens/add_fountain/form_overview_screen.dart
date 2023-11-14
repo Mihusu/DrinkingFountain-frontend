@@ -13,6 +13,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 //Secure storage
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:toerst/widgets/star_rating_builder.dart';
 
 // Declare constants for easy adjustments and maintainability
 const double imageScaleFactor = 1.2;
@@ -70,20 +71,6 @@ class _FormOverviewState extends State<FormOverview> {
         _address = address; // Update the state variable if address is fetched
       });
     }
-  }
-
-  // TODO: Modify this widget to take a max rating too.
-  // This widget is needed multiple times throughout the project. Where should it go?
-  Widget _buildStarRating(int rating) {
-    return Row(
-      children: List.generate(
-        rating,
-        (index) => const Icon(
-          Icons.star,
-          color: Colors.black,
-        ),
-      ),
-    );
   }
 
 // TODO: Refactor this to network_services.dart
@@ -198,8 +185,10 @@ class _FormOverviewState extends State<FormOverview> {
                           const SizedBox(height: 20),
                           Text(widget.fountainData.type),
                           const SizedBox(height: 10),
-                          _buildStarRating(
-                              (widget.fountainData.rating).toInt()),
+                          StarRatingBuilder(
+                            ratingAsInt: (widget.fountainData.rating).toInt(),
+                            showRatingAsDouble: false,
+                          ),
                           const SizedBox(height: 10),
                           Text(_address ?? 'No fountain found'),
                           const SizedBox(height: 10),
