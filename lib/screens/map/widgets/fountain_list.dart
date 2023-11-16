@@ -40,7 +40,7 @@ class FountainList extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         color: listedItemColor,
-        borderRadius: BorderRadius.circular(5.0),
+        borderRadius: BorderRadius.circular(90.0),
         border: Border.all(color: listedItemBorderColor, width: 1.0),
       ),
       child: _buildListItemRow(fountainData),
