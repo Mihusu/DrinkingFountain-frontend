@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}'); // Show an error message if fetching fails
             } else {
-              final username = snapshot.data ?? 'Default Username';
+              final username = snapshot.data;
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -69,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    username,
+                    username!,
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
