@@ -26,7 +26,7 @@ class FountainList extends StatelessWidget {
 
   ListView _buildListView() {
     return ListView.builder(
-      padding: const EdgeInsets.only(top: 13.0, bottom: 70.0),
+      padding: const EdgeInsets.only(bottom: 70.0),
       itemCount: nearestFountains.length,
       itemBuilder: (BuildContext context, int index) {
         final item = nearestFountains[index];

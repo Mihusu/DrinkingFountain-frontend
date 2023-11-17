@@ -83,7 +83,7 @@ class DragHandle extends StatelessWidget {
     return Container(
       width: 55.0,
       height: 6.0,
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 14.0),
       decoration: BoxDecoration(
         color: draggablePillColor,
         borderRadius: BorderRadius.circular(4.0),
