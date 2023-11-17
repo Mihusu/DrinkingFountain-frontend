@@ -9,8 +9,8 @@ class BackToMapButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
+    return TextButton(
+      onPressed: () {
         Navigator.pushAndRemoveUntil(
           context,
           PageRouteBuilder(
@@ -35,23 +35,20 @@ class BackToMapButton extends StatelessWidget {
           (Route<dynamic> route) => false,
         );
       },
-      child: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: backToMapButtonIconColor,
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: backToMapButtonIconColor,
+          ),
+          Text(
+            "Show Map",
+            style: TextStyle(
+              color: backToMapButtonTextColor,
             ),
-            Text(
-              "Show Map",
-              style: TextStyle(
-                color: backToMapButtonTextColor,
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

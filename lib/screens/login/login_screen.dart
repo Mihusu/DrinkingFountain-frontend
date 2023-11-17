@@ -9,8 +9,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 //Secure storage
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:toerst/screens/add_fountain/widgets/back_to_map_button.dart';
 import 'package:toerst/screens/profile/profile_screen.dart';
 import 'package:toerst/screens/register/register_screen.dart';
+import 'package:toerst/screens/reset_password/reset_password_screen.dart';
 import 'package:toerst/widgets/standard_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -61,8 +63,12 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         //Contains the build in back button
-        title: const Text('Login'),
-        backgroundColor: Colors.black,
+        title: const Text('Login', style: TextStyle(color: Colors.black)),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        leading: const BackToMapButton(),
+        leadingWidth: 107,
+        elevation: 0,
       ),
       body: Center(
         child: Column(
@@ -100,6 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             // Login Button
+            const SizedBox(height: 20),
             StandardButton(
               onPressed: () async {
                 bool loginSuccess = await login();
@@ -126,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
               backgroundColor: Colors.black,
               width: 150,
             ),
-            const SizedBox(height: 25), // Add some space between the button and the text
+            const SizedBox(height: 30), // Add some space between the button and the text
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -163,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Forgotten your password? ',
+                  'Forgot your password? ',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
@@ -176,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const RegisterScreen(),
+                        builder: (context) => const ResetPasswordRequest(),
                       ),
                     );
                   },

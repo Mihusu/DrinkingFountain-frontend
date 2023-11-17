@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 //Secure storage
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:toerst/screens/approve_fountain/approve_screen.dart';
+import 'package:toerst/screens/login/login_screen.dart';
 import 'package:toerst/services/user_service.dart';
 import 'package:toerst/widgets/standard_button.dart';
 
@@ -30,12 +31,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _username = _userService.getUsername();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User Profile', style: TextStyle(color: Colors.black),),
+        title: const Text('User Profile', style: TextStyle(color: Colors.black)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new_rounded),
@@ -60,6 +60,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const SizedBox(height: 20),
+                  const Text(
+                    'Welcome!',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   Text(
                     username,
                     style: const TextStyle(
@@ -67,11 +75,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  // const Text(
-                  //   'johndoe@email.com',
-                  //   style: TextStyle(fontSize: 16),
-                  // ),
                   const SizedBox(height: 20),
                   Center(
                     child: Column(
@@ -82,7 +85,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onPressed: () async {
                             await widget.secureStorage.delete(key: "JWT");
                             if (context.mounted) {
-                              Navigator.pop(context);
+                              Navigator.pushReplacement(context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginScreen(),
+                                ),
+                              );
                             }
                           },
                           label: 'Log out',
@@ -95,9 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ApproveScreen(
-                                  
-                                ),
+                                builder: (context) => ApproveScreen(),
                               ),
                             ); // Navigate back on success
                           },

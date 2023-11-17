@@ -1,36 +1,32 @@
 import 'dart:async';
-
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
 // Http
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
-//env file
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
-// Widgets and screens
 import 'package:toerst/screens/login/login_screen.dart';
 import 'package:toerst/widgets/standard_button.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class ResetPasswordRequest extends StatefulWidget {
+  const ResetPasswordRequest({super.key});
 
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  _ResetPasswordRequestState createState() => _ResetPasswordRequestState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
-  bool _registerFailed = false;
+class _ResetPasswordRequestState extends State<ResetPasswordRequest> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordVerifierController = TextEditingController();
   String repeatPassword = '';
-  bool showErrorMessage = false;
-  bool showPasswordMismatchError = false;
-
-
-  Future<bool> register() async {
+  bool _showResetFailedMessage = false;
+  bool _showPasswordMismatchMessage = false;
+  bool _resetPasswordFailed = false;
+  bool _showPasswordRequirementFailedMessage = false;
+  
+  Future<bool> resetPassword() async {
     final apiKey = dotenv.env['API_KEY'] ?? 'default';
     final ip = dotenv.env['BACKEND_IP'] ?? 'default';
 
@@ -39,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       'Content-Type': 'application/json'
     };
 
-    final url = 'http://$ip/auth/register';
+    final url = 'http://$ip/auth/reset-password';
 
     Map data = {
       'username': usernameController.text,
@@ -62,22 +58,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       appBar: AppBar(
         //Contains the build in back button
-        title: const Text('Register', style: TextStyle(color: Colors.black)),
+        title: const Text('Reset password', style: TextStyle(color: Colors.black)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: Colors.black, // Set the color of the back button icon
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LoginScreen(),
-              ),
-            ); // Navigate back
-          },
+        leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LoginScreen(),
+            ),
+          );
+        },
+        color: Colors.black,
         ),
         elevation: 0,
       ),
@@ -86,24 +79,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             // Conditional widget to show "Login Failed" message
-            if (_registerFailed)
+            if (_resetPasswordFailed)
                Column(
                 children: [
                   const SizedBox(height: 20),
                   Visibility(
-                    visible: showPasswordMismatchError || showErrorMessage,
+                    visible: _showPasswordMismatchMessage || _showResetFailedMessage || _showPasswordRequirementFailedMessage,
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          if (showPasswordMismatchError)
+                          if (_showPasswordMismatchMessage)
                             const Text(
                               "The password don't match",
                               style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red),
                             ),
-                          if (showErrorMessage)
+                          if (_showResetFailedMessage)
                             const Text(
-                              'Register Failed. Please provide valid credentials',
+                              'Reset password Failed. Please provide valid credentials',
+                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red),
+                            ),
+                          if (_showPasswordRequirementFailedMessage)
+                            const Text(
+                              'Password is too short',
                               style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red),
                             ),
                         ],
@@ -124,7 +122,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 },
                 decoration: const InputDecoration(
                   labelText: 'Username',
-                  hintText: 'Must not already be taken',
                 ),
               ),
             ),
@@ -153,12 +150,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
             const SizedBox(height: 15),
-            // Register Button
+            // Reset password Button
             StandardButton(
               onPressed: () async {
-                if (passwordController.text == passwordVerifierController.text) {
-                  bool registerSuccess = await register();
-                  if (registerSuccess) {
+                if (passwordController.text == passwordVerifierController.text && passwordController.text.length >= 8 && passwordVerifierController.text.length >= 8) {
+                  bool resetPasswordSuccess = await resetPassword();
+                  if (resetPasswordSuccess) {
                     if (!context.mounted) {
                       return; // Check if context is still available
                     }
@@ -170,36 +167,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ); // Navigate back on success
                   } else {
                     setState(() {
-                      _registerFailed = true; // Handle register failure
-                      showErrorMessage = true; // Show the error message temporarily
+                      _resetPasswordFailed = true; // Handle password failure
+                      _showResetFailedMessage = true; // Show the error message temporarily
+                      _showPasswordRequirementFailedMessage = false;
                     });
 
                     // Set a timer to hide the error message after a certain duration
                     Timer(const Duration(seconds: 4), () {
                       if (context.mounted) {
                         setState(() {
-                          showErrorMessage = false;
+                          _showResetFailedMessage = false;
                         });
                       }
                     });
                   }
-                } else {
+                } else if (passwordController.text.length < 8 || passwordVerifierController.text.length < 8) {
                   setState(() {
-                    showPasswordMismatchError = true; // Show the password mismatch error
-                    showErrorMessage = false; // Reset the register failed error
+                    _showPasswordRequirementFailedMessage = true;
+                    _showPasswordMismatchMessage = false;
+                    _showResetFailedMessage = false;
+                    _resetPasswordFailed = true;
                   });
 
                   // Set a timer to hide the password mismatch error after a certain duration
                   Timer(const Duration(seconds: 3), () {
                     if (context.mounted) {
                       setState(() {
-                        showPasswordMismatchError = false;
+                        _showPasswordRequirementFailedMessage = false;
+                      });
+                    }
+                  });
+
+                } else {
+                  setState(() {
+                    _showPasswordMismatchMessage = true; // Show the password mismatch error
+                    _showResetFailedMessage = false; // Reset password failed error
+                    _showPasswordRequirementFailedMessage = false;
+                  });
+
+                  // Set a timer to hide the password mismatch error after a certain duration
+                  Timer(const Duration(seconds: 3), () {
+                    if (context.mounted) {
+                      setState(() {
+                        _showPasswordMismatchMessage = false;
                       });
                     }
                   });  
                 }
               },
-              label: 'Register',
+              label: 'Confirm',
               textColor: Colors.white,
               backgroundColor: Colors.black,
               width: 150,

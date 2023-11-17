@@ -98,17 +98,19 @@ class _ApproveScreen extends State<ApproveScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Approve fountains'),
-        backgroundColor: Colors.black,
+        title: const Text('Approve fountains', style: TextStyle(color: Colors.black)),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: Colors.white, // Set the color of the back button icon
+            color: Colors.black, // Set the color of the back button icon
           ),
           onPressed: () {
             Navigator.pop(context); // Navigate back
           },
         ),
+        elevation: 0,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
