@@ -2,9 +2,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     
     <application
-        android:label="toerst"
+        android:label="Tørst"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/toerst_logo">
         
         <activity
             android:name=".MainActivity"

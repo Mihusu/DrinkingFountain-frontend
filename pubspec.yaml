@@ -71,4 +71,5 @@ flutter:
     - assets/sounds/next_button_sound.mp3
     - assets/Icons/Filling_Station_Fountain_Icon.svg
     - assets/Icons/Regular_Drinking_Fountain_Icon.svg
+    - assets/launcher_icons/toerst_logo.png
   uses-material-design: true
