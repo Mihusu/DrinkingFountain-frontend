@@ -19,9 +19,9 @@ class AddFountainButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GeneralFloatingActionButton(
       onPressed: () async {
-        bool isloggedIN = await roleService.isUserLoggedIn(secureStorage);
+        bool isloggedIn = await roleService.isUserLoggedIn(secureStorage);
 
-        if (isloggedIN) {
+        if (isloggedIn) {
           if (context.mounted) {
             Navigator.push(
               context,
