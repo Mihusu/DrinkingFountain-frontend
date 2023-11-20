@@ -55,6 +55,7 @@ dependencies:
   flutter_svg: ^2.0.9
   swipe_cards: ^2.0.0+1
   maps_launcher: ^2.2.0
+  jwt_decoder: ^2.0.1
 
 dev_dependencies:
   flutter_test:
