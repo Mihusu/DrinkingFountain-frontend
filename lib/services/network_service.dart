@@ -42,17 +42,18 @@ class NetworkService {
             markerId: MarkerId('marker${location.id}'),
             position: LatLng(location.latitude, location.longitude),
             infoWindow: InfoWindow(
-                title: address,
-                snippet: 'Distance ${location.distance.toStringAsFixed(2)} km',
-                onTap: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              FocusFountainScreen(fountainId: location.id),
-                        ),
-                      )
-                    }),
+              title: address,
+              snippet: 'Distance ${location.distance.toStringAsFixed(2)} km',
+              onTap: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        FocusFountainScreen(fountainId: location.id),
+                  ),
+                )
+              },
+            ),
           ),
         );
       }
