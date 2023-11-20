@@ -23,7 +23,7 @@ class _ReviewScreenState extends State<CreateReviewScreen> {
   double rating = 3;
   String review = "";
   String errorMessage = "";
-  final secureStorage = new FlutterSecureStorage();
+  final secureStorage = const FlutterSecureStorage();
 
   @override
   void initState() {
@@ -35,8 +35,8 @@ class _ReviewScreenState extends State<CreateReviewScreen> {
     String? jwt = await secureStorage.read(key: "JWT");
 
     if (jwt == null) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
     }
   }
 
@@ -109,7 +109,7 @@ class _ReviewScreenState extends State<CreateReviewScreen> {
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             // Add your review content here
             const Text(
               'New Review',
@@ -118,7 +118,10 @@ class _ReviewScreenState extends State<CreateReviewScreen> {
             const SizedBox(height: 10),
             FountainRatingBar(onRatingChanged: _setRating),
             const SizedBox(height: 50),
-            CustomTextField(charLimit: 200, onReviewSubmitted: _setReview),
+            Flexible(
+              child: CustomTextField(
+                  charLimit: 200, onReviewSubmitted: _setReview),
+            ),
             const SizedBox(height: 25),
             StandardButton(
               label: 'Submit',
@@ -129,7 +132,7 @@ class _ReviewScreenState extends State<CreateReviewScreen> {
               backgroundColor: Colors.blue,
               textColor: Colors.white,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             if (errorMessage.isNotEmpty) // Display error message conditionally
