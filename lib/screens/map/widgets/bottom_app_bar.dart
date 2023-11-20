@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:toerst/screens/login/login_screen.dart';
 import 'package:toerst/screens/profile/profile_screen.dart';
+import 'package:toerst/services/role_state_service.dart';
 import 'package:toerst/themes/app_colors.dart';
 
 //Secure storage
@@ -13,8 +14,9 @@ class CustomBottomAppBar extends StatelessWidget {
   final String text;
   final void Function() action; // Use Function() type for no-arg callbacks.
   final FlutterSecureStorage secureStorage;
+  final RoleService roleService = RoleService();
 
-  const CustomBottomAppBar({
+  CustomBottomAppBar({
     required this.icon,
     required this.text,
     required this.action,
@@ -40,10 +42,10 @@ class CustomBottomAppBar extends StatelessWidget {
                     children: [
                       Icon(icon, color: bottomAppBarIconColor),
                       const SizedBox(height: 8),
-                      Text(text, 
-                        style: const TextStyle(color: bottomAppBarTextColor, 
-                        fontWeight: FontWeight.w600)
-                      ),
+                      Text(text,
+                          style: const TextStyle(
+                              color: bottomAppBarTextColor,
+                              fontWeight: FontWeight.w600)),
                     ],
                   ),
                 ),
@@ -70,9 +72,10 @@ class CustomBottomAppBar extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () async {
-                    final authToken = await secureStorage.read(key: 'JWT');
+                    bool isloggedIn =
+                        await roleService.isUserLoggedIn(secureStorage);
 
-                    if (authToken != null) {
+                    if (isloggedIn) {
                       if (context.mounted) {
                         // Check if context is still available
                         Navigator.push(
@@ -100,9 +103,10 @@ class CustomBottomAppBar extends StatelessWidget {
                     children: [
                       Icon(Icons.account_circle, color: bottomAppBarIconColor),
                       SizedBox(height: 8),
-                      Text("Profile", 
-                        style: TextStyle(color: Colors.black, 
-                        fontWeight: FontWeight.w600),
+                      Text(
+                        "Profile",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w600),
                       )
                     ],
                   ),

@@ -12,8 +12,6 @@ import 'package:toerst/services/network_service.dart';
 import 'package:toerst/screens/map/widgets/draggable_fountain_list.dart';
 // import 'screens/map/widgets/user_location_button.dart';
 
-// env file
-
 // Import constants
 import 'package:toerst/config/draggable_sheet_config/draggable_sheet_constants.dart';
 
@@ -188,7 +186,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
         action: _sheetPropertiesMap[_getCurrentState()]!.action,
         secureStorage: secureStorage,
       ),
-      floatingActionButton: const AddFountainButton(),
+      floatingActionButton: AddFountainButton(
+        secureStorage: secureStorage,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Stack(
         children: [
