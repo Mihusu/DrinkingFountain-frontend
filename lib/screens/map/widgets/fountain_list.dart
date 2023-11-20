@@ -5,6 +5,8 @@ import 'package:toerst/models/nearest_fountain.dart';
 import 'package:toerst/services/maps_launcher_service.dart';
 import 'package:toerst/widgets/star_rating_builder.dart';
 
+import '../../view_fountain/view_fountain_screen.dart';
+
 class FountainList extends StatelessWidget {
   final Color listedItemColor;
   final Color listedItemBorderColor;
@@ -21,30 +23,42 @@ class FountainList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildListView();
+    return _buildListView(context);
   }
 
-  ListView _buildListView() {
+  ListView _buildListView(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.only(bottom: 70.0),
       itemCount: nearestFountains.length,
       itemBuilder: (BuildContext context, int index) {
         final item = nearestFountains[index];
-        return _buildListItem(item);
+        return _buildListItem(context, item);
       },
     );
   }
 
-  Container _buildListItem(fountainData) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 4.0),
-      padding: const EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-        color: listedItemColor,
-        borderRadius: BorderRadius.circular(90.0),
-        border: Border.all(color: listedItemBorderColor, width: 1.0),
+  GestureDetector _buildListItem(
+      BuildContext context, NearestFountain fountainData) {
+    return GestureDetector(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 4.0),
+        padding: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          color: listedItemColor,
+          borderRadius: BorderRadius.circular(90.0),
+          border: Border.all(color: listedItemBorderColor, width: 1.0),
+        ),
+        child: _buildListItemRow(fountainData),
       ),
-      child: _buildListItemRow(fountainData),
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                FocusFountainScreen(fountainId: fountainData.id),
+          ),
+        )
+      },
     );
   }
 
