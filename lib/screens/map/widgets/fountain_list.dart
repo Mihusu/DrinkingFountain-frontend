@@ -124,7 +124,7 @@ class FountainList extends StatelessWidget {
           getDirectionsFromCoordinates(latitude, longitude);
         },
         icon: const Icon(
-          Icons.arrow_forward,
+          Icons.navigation_sharp,
           color: Colors.white,
         ),
       ),
