@@ -55,7 +55,6 @@ class FountainImageDTO {
 class ReviewDTO {
   final String text;
   final int stars;
-  final List<ReviewImageDTO> fountainImages;
   final String type;
   final String username;
   final DateTime createdAt;
@@ -63,7 +62,6 @@ class ReviewDTO {
   ReviewDTO({
     required this.text,
     required this.stars,
-    required this.fountainImages,
     required this.type,
     required this.username,
     required this.createdAt,
@@ -73,26 +71,9 @@ class ReviewDTO {
     return ReviewDTO(
       text: json['text'] as String,
       stars: json['stars'] as int,
-      fountainImages: (json['fountainImages'] as List)
-          .map((imageJson) => ReviewImageDTO.fromJson(imageJson))
-          .toList(),
       type: json['type'] as String,
       username: json['username'] as String,
       createdAt: DateTime.parse(json['createdAt']),
-    );
-  }
-}
-
-class ReviewImageDTO {
-  final String base64;
-
-  ReviewImageDTO({
-    required this.base64,
-  });
-
-  factory ReviewImageDTO.fromJson(Map<String, dynamic> json) {
-    return ReviewImageDTO(
-      base64: json['imageBase64'] as String,
     );
   }
 }

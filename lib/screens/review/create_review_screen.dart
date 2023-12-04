@@ -58,7 +58,6 @@ class _ReviewScreenState extends State<CreateReviewScreen> {
     Map data = {
       'text': review,
       'stars': rating,
-      'base64Images': [],
       'type': "FILLING", // Type of the fountain (e.g., 'FILLING' or 'DRINKING')
       'drinkingFountainId': widget.fountainId,
     };
