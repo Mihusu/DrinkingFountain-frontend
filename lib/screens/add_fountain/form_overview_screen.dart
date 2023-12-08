@@ -186,8 +186,8 @@ class _FormOverviewState extends State<FormOverview> {
                           Text(widget.fountainData.type),
                           const SizedBox(height: 10),
                           StarRatingBuilder(
-                            ratingAsInt: (widget.fountainData.rating).toInt(),
-                            showRatingAsDouble: false,
+                            rating: widget.fountainData.rating,
+                            displayRatingValue: false,
                           ),
                           const SizedBox(height: 10),
                           Text(_address ?? 'No fountain found'),

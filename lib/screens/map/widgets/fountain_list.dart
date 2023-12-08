@@ -92,15 +92,15 @@ class FountainList extends StatelessWidget {
     final String distance = fountainData.distance.toStringAsFixed(1);
     final String distanceText = "$distance km";
     final String address = fountainData.address ?? "Address not Found";
-    final int starRating = fountainData.score.toInt();
+    final double starRating = fountainData.score;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(distanceText),
         StarRatingBuilder(
-          ratingAsInt: starRating,
-          showRatingAsDouble: false,
+          rating: starRating,
+          displayRatingValue: false,
         ),
         SizedBox(
           width: double.infinity, // or a specific width

@@ -102,7 +102,8 @@ class _ApproveScreen extends State<ApproveScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Approve fountains', style: TextStyle(color: Colors.black)),
+        title: const Text('Approve fountains',
+            style: TextStyle(color: Colors.black)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         leading: IconButton(
@@ -138,73 +139,102 @@ class _ApproveScreen extends State<ApproveScreen> {
                             SizedBox(
                               height: 475, // Set a fixed height for SwipeCards
                               child: _emptyList
-                              ? const Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "No more drinking fountains to be approved.",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                )
-                              : SwipeCards(matchEngine: _matchEngine!,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Container(
-                                    color: Colors.white,
-                                    alignment: Alignment.center,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Padding(padding: const EdgeInsets.all(imagePadding),
-                                          child: Align(alignment: Alignment.topCenter,
-                                            child: Transform.scale(
-                                              scale: imageScaleFactor,
-                                              child: ClipRRect(borderRadius: BorderRadius.circular(20.0),
-                                                child: _swipeItems[index].content.imageBase64Format ?? Container(),
+                                  ? const Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "No more drinking fountains to be approved.",
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  : SwipeCards(
+                                      matchEngine: _matchEngine!,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Container(
+                                          color: Colors.white,
+                                          alignment: Alignment.center,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.all(
+                                                    imagePadding),
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child: Transform.scale(
+                                                    scale: imageScaleFactor,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.0),
+                                                      child: _swipeItems[index]
+                                                              .content
+                                                              .imageBase64Format ??
+                                                          Container(),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                              const SizedBox(height: 20),
+                                              Text(
+                                                  "By: ${_swipeItems[index].content.username}"),
+                                              const SizedBox(height: 20),
+                                              Text(
+                                                  "${_swipeItems[index].content.type}"),
+                                              const SizedBox(height: 20),
+                                              // Build row of stars, based on fountain rating.
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  StarRatingBuilder(
+                                                      rating: _swipeItems[index]
+                                                          .content
+                                                          .rating),
+                                                ],
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(
+                                                    addressPadding),
+                                                child: Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    _swipeItems[index]
+                                                            .content
+                                                            .address ??
+                                                        'No fountain found',
+                                                    textAlign: TextAlign
+                                                        .center, // Align the text center within the Text widget
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Text(
+                                                  "${_swipeItems[index].content.review ?? 'No review provided.'}"),
+                                            ],
                                           ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Text("By: ${_swipeItems[index].content.username}"),
-                                        const SizedBox(height: 20),
-                                        Text("${_swipeItems[index].content.type}"),
-                                        const SizedBox(height: 20),
-                                        // Build row of stars, based on fountain rating.
-                                        Row(mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            StarRatingBuilder(ratingAsInt: (_swipeItems[index].content.rating).toInt()),
-                                          ],
-                                        ),
-                                        Padding(padding: const EdgeInsets.all(addressPadding),
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              _swipeItems[index].content.address ?? 'No fountain found',
-                                              textAlign: TextAlign.center, // Align the text center within the Text widget
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Text("${_swipeItems[index].content.review ?? 'No review provided.'}"),
-                                      ],
+                                        );
+                                      },
+                                      onStackFinished: () {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                          content: Text(
+                                              "No more drinking or filling fountains"),
+                                          duration: Duration(milliseconds: 500),
+                                        ));
+                                        setState(() {
+                                          _emptyList = true;
+                                        });
+                                      },
+                                      leftSwipeAllowed: true,
+                                      rightSwipeAllowed: true,
+                                      fillSpace: true,
                                     ),
-                                  );
-                                },
-                                onStackFinished: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                    content: Text("No more drinking or filling fountains"),
-                                    duration: Duration(milliseconds: 500),
-                                  ));
-                                  setState(() {
-                                    _emptyList = true;
-                                  });
-                                },
-                                leftSwipeAllowed: true,
-                                rightSwipeAllowed: true,
-                                fillSpace: true,
-                              ),
                             ),
                           ],
                         ),

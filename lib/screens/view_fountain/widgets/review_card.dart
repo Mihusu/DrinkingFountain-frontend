@@ -39,8 +39,8 @@ class ReviewCard extends StatelessWidget {
                     // NOTE: The desired size of the star icons before was set to 25.0.
                     children: [
                       StarRatingBuilder(
-                        ratingAsInt: review.stars,
-                        showRatingAsDouble: false,
+                        rating: review.stars.toDouble(),
+                        displayRatingValue: false,
                       ),
                     ],
                   ),
