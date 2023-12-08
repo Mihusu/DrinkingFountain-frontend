@@ -100,7 +100,6 @@ class FountainList extends StatelessWidget {
         Text(distanceText),
         StarRatingBuilder(
           rating: starRating,
-          displayRatingValue: false,
         ),
         SizedBox(
           width: double.infinity, // or a specific width
