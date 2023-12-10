@@ -1,40 +1,68 @@
-// PATH: lib/widgets/rating_stars.dart
-
+// PATH: lib/widgets/star_rating_builder.dart
 import 'package:flutter/material.dart';
-import 'package:toerst/themes/app_colors.dart'; // Importing star colors
+import 'package:toerst/themes/app_colors.dart';
 
 class StarRatingBuilder extends StatelessWidget {
-  final int ratingAsInt;
-  final int maxRating;
-  final bool
-      showRatingAsDouble; // Choose if you want show the rating as a double.
+  final double rating;
+  final int maxStars;
+  final bool displayRatingValue;
+
+  static const int decimalPrecision =
+      1; // Defines the number format precision for the rating text.
 
   const StarRatingBuilder({
     super.key,
-    required this.ratingAsInt,
-    this.maxRating = 5,
-    this.showRatingAsDouble = true,
+    required this.rating,
+    this.maxStars = 5,
+    this.displayRatingValue = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    int rating = ratingAsInt;
-
-    List<Widget> starsRow = [];
-
-    for (int i = 1; i <= maxRating; i++) {
-      if (i <= rating) {
-        starsRow
-            .add(const Icon(Icons.star, color: starFilledColor)); // Filled star
-      } else {
-        starsRow.add(const Icon(Icons.star_border,
-            color: starBorderColor)); // Empty star
-      }
+    List<Widget> starWidgets = List.generate(maxStars, _buildStar);
+    if (displayRatingValue) {
+      starWidgets.add(Text(rating.toStringAsFixed(decimalPrecision)));
     }
+    return Row(mainAxisSize: MainAxisSize.min, children: starWidgets);
+  }
 
-    if (showRatingAsDouble) {
-      starsRow.add(Text(ratingAsInt.toDouble().toString()));
-    }
-    return Row(children: starsRow);
+  Widget _buildStar(int index) {
+    int fullStars = rating.floor();
+    double partialFill = rating % 1;
+    bool isFullStar = index < fullStars;
+    return isFullStar
+        ? Icon(Icons.star, color: starFilledColor)
+        : index == fullStars
+            ? Stack(children: [
+                _PartialStar(percentageFilled: partialFill),
+                Icon(Icons.star_border, color: starFilledColor)
+              ])
+            : Icon(Icons.star_border, color: starFilledColor);
+  }
+}
+
+class _PartialStar extends StatelessWidget {
+  final double percentageFilled;
+  final Color fillColor;
+
+  const _PartialStar({
+    required this.percentageFilled,
+    this.fillColor = starFilledColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      shaderCallback: (Rect bounds) {
+        // The gradient has two stops at the same point to create a sharp transition.
+        return LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [fillColor, fillColor, Colors.transparent],
+          stops: [0, percentageFilled, percentageFilled],
+        ).createShader(bounds);
+      },
+      child: const Icon(Icons.star, color: Colors.white),
+    );
   }
 }

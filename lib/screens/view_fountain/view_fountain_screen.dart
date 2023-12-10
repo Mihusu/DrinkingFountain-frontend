@@ -154,7 +154,7 @@ List<Widget> _fountainView(
         Transform.scale(
           scale: 1.5, // Adjusts the size.
           child: StarRatingBuilder(
-            ratingAsInt: _fountainData!.score.toInt(),
+            rating: _fountainData!.score,
           ),
         ),
       ],
