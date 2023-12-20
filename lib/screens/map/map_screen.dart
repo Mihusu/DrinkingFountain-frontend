@@ -48,8 +48,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     super.initState();
     _initialize();
 
-    // Should be in be in config folder?
-//------------------------Should be moved---------------------------------//
     _sheetPropertiesMap = {
       SheetPositionState.top: SheetProperties(
         icon: Icons.arrow_downward,
@@ -67,7 +65,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
         action: () => snapSheet(middlePosition),
       ),
     };
-//------------------------Should be moved---------------------------------//
 
     _initializeAnimationController();
   }
@@ -99,8 +96,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     }
   }
 
-//------------------------Should be moved---------------------------------//
-  // Should be moved to a service too I think.
   SheetPositionState _getCurrentState() {
     if (_sheetPosition <= 0.1) {
       return SheetPositionState.top;
@@ -110,10 +105,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       return SheetPositionState.bottom;
     }
   }
-//------------------------Should be moved---------------------------------//
 
-//------------------------Should be moved---------------------------------//
-  // Should be moved to a service too I think.
   void snapSheet(double targetPosition) {
     _animation = Tween<double>(begin: _sheetPosition, end: targetPosition)
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut))
@@ -126,10 +118,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     _controller.reset();
     _controller.forward();
   }
-//------------------------Should be moved---------------------------------//
 
-//------------------------Should be moved---------------------------------//
-  // Should be moved to a service I think..
   double getSnapPosition(double currentPosition) {
     double distTop = (currentPosition - topReference).abs();
     double distMiddle = (currentPosition - middleReference).abs();
@@ -143,7 +132,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       return bottomPosition;
     }
   }
-//------------------------Should be moved---------------------------------//
 
   void _initializeAnimationController() {
     _controller = AnimationController(
@@ -152,8 +140,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     );
   }
 
-//------------------------Should be moved---------------------------------//
-  // Should be moved to a service?
   Future<void> _moveCameraToCurrentLocation() async {
     final locationService = LocationService();
     final target = await locationService.fetchInitialLocation();
@@ -167,7 +153,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
           .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
     }
   }
-//------------------------Should be moved---------------------------------//
 
   @override
   void dispose() {
@@ -224,8 +209,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     );
   }
 
-//------------------------Should be moved---------------------------------//
-  // Should be moved
   Positioned _buildMoveCameraToCurrentPositionFloatingActionButton(
       double screenHeight) {
     return Positioned(
@@ -241,5 +224,4 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
           : Container(),
     );
   }
-//------------------------Should be moved---------------------------------//
 }
